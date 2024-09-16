@@ -5,8 +5,6 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 
 export default function Home() {
-  const supabase = createClient();
-  console.log(supabase);
   return (
     <div>
       <HomePage />
