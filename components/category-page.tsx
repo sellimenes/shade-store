@@ -1,14 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -20,6 +12,7 @@ import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { getProductsByCategoryId } from "@/lib/supabase/products";
 import { getCategoryBySlug } from "@/lib/supabase/categories";
+import { ProductCard } from "./product-card";
 
 interface Product {
   id: string;
@@ -27,6 +20,7 @@ interface Product {
   description: string;
   price: number;
   image: string;
+  slug: string;
 }
 
 interface Category {
@@ -168,30 +162,13 @@ export function CategoryPage({ category: categorySlug }: { category: string }) {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProducts.map((product) => (
-              <Card key={product.id}>
-                <CardHeader>
-                  <img
-                    src={
-                      product.image || "/placeholder.svg?height=200&width=200"
-                    }
-                    alt={product.name}
-                    className="w-full h-48 object-cover rounded-t-lg"
-                  />
-                </CardHeader>
-                <CardContent>
-                  <CardTitle>{product.name}</CardTitle>
-                  <p className="text-sm text-gray-500 mt-1">
-                    {product.description}
-                  </p>
-                  <p className="text-2xl font-bold mt-2">
-                    ${product.price.toFixed(2)}
-                  </p>
-                  {/* Remove the rating display */}
-                </CardContent>
-                <CardFooter>
-                  <Button className="w-full">Add to Cart</Button>
-                </CardFooter>
-              </Card>
+              <ProductCard
+                key={product.id}
+                product={{
+                  ...product,
+                  category_slug: categorySlug,
+                }}
+              />
             ))}
           </div>
         </div>

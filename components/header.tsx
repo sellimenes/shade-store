@@ -39,11 +39,17 @@ export function Header() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                {categories.map((category) => (
-                  <DropdownMenuItem key={category.id}>
-                    <Link href={`/${category.slug}`}>{category.name}</Link>
-                  </DropdownMenuItem>
-                ))}
+                {categories.map(
+                  (category: {
+                    id: string | number;
+                    slug: string;
+                    name: string;
+                  }) => (
+                    <DropdownMenuItem key={category.id}>
+                      <Link href={`/${category.slug}`}>{category.name}</Link>
+                    </DropdownMenuItem>
+                  )
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
             <Link href="/deals" className="text-gray-500 hover:text-gray-900">

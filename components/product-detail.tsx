@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,10 +9,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
-import { ShoppingCart, Search, User, Star, Plus, Minus } from "lucide-react";
+import { Star, Plus, Minus } from "lucide-react";
+import Image from "next/image";
 
 interface ProductDetailProps {
   product: {
@@ -20,13 +20,36 @@ interface ProductDetailProps {
     name: string;
     description: string;
     price: number;
-    image: string;
+    image: string[];
     slug: string;
+    cover_img: string;
   };
 }
 
 export function ProductDetail({ product }: ProductDetailProps) {
   const [quantity, setQuantity] = useState(1);
+  const [currentImageIndex, setCurrentImageIndex] = useState(-1);
+  const [isZoomed, setIsZoomed] = useState(false);
+  const imageRef = useRef<HTMLDivElement>(null);
+  const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
+
+  const handleImageClick = (index: number) => {
+    setCurrentImageIndex(index);
+  };
+
+  const handleMouseMove = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      if (!imageRef.current) return;
+      const { left, top, width, height } =
+        imageRef.current.getBoundingClientRect();
+      const x = (event.clientX - left) / width;
+      const y = (event.clientY - top) / height;
+      setZoomPosition({ x, y });
+    },
+    []
+  );
+
+  const allImages = [product.cover_img, ...product.image];
 
   const incrementQuantity = () => setQuantity((prev) => prev + 1);
   const decrementQuantity = () =>
@@ -38,37 +61,64 @@ export function ProductDetail({ product }: ProductDetailProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start">
             {/* Image gallery */}
-            <div className="flex flex-col-reverse">
-              <div className="hidden mt-6 w-full max-w-2xl mx-auto sm:block lg:max-w-none">
+            <div className="flex flex-col">
+              <div
+                className="relative w-full h-0 pb-[100%] overflow-hidden rounded-lg"
+                onMouseEnter={() => setIsZoomed(true)}
+                onMouseLeave={() => setIsZoomed(false)}
+                onMouseMove={handleMouseMove}
+                ref={imageRef}
+              >
+                <div className="absolute inset-0">
+                  <Image
+                    src={
+                      currentImageIndex === -1
+                        ? product.cover_img
+                        : product.image[currentImageIndex]
+                    }
+                    alt={product.name}
+                    layout="fill"
+                    objectFit="cover"
+                    className="w-full h-full object-center object-cover transition-transform duration-100 ease-out"
+                    style={{
+                      transform: isZoomed ? `scale(2.5)` : "none",
+                      transformOrigin: `${zoomPosition.x * 100}% ${
+                        zoomPosition.y * 100
+                      }%`,
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Thumbnail gallery */}
+              <div className="mt-6 w-full max-w-2xl mx-auto sm:block lg:max-w-none">
                 <div
                   className="grid grid-cols-4 gap-6"
                   aria-orientation="horizontal"
                   role="tablist"
                 >
-                  {[1, 2, 3, 4].map((img) => (
+                  {allImages.map((img, index) => (
                     <button
-                      key={img}
-                      className="relative h-24 bg-white rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4"
+                      key={index}
+                      onClick={() => handleImageClick(index - 1)}
+                      className={`relative h-24 bg-white rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4 ${
+                        currentImageIndex === index - 1
+                          ? "ring-2 ring-indigo-500"
+                          : ""
+                      }`}
                     >
-                      <span className="sr-only">Product image {img}</span>
+                      <span className="sr-only">Product image {index + 1}</span>
                       <span className="absolute inset-0 rounded-md overflow-hidden">
-                        <img
-                          src={`/placeholder.svg?height=96&width=96`}
+                        <Image
+                          src={img}
                           alt=""
-                          className="w-full h-full object-center object-cover"
+                          layout="fill"
+                          objectFit="cover"
                         />
                       </span>
                     </button>
                   ))}
                 </div>
-              </div>
-
-              <div className="w-full aspect-w-1 aspect-h-1">
-                <img
-                  src={product.image || "/placeholder.svg?height=600&width=600"}
-                  alt={product.name}
-                  className="w-full h-full object-center object-cover sm:rounded-lg"
-                />
               </div>
             </div>
 
