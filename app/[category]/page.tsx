@@ -1,10 +1,5 @@
 import { CategoryPage } from "@/components/category-page";
-import React from "react";
 
-type Props = {};
-
-const Category = (props: Props) => {
-  return <CategoryPage />;
-};
-
-export default Category;
+export default function Category({ params }: { params: { category: string } }) {
+  return <CategoryPage category={params.category} />;
+}

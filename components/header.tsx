@@ -1,9 +1,29 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ShoppingCart, Search, User } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ShoppingCart, Search, User, ChevronDown } from "lucide-react";
+import { getAllCategories } from "@/lib/supabase/categories";
 
 export function Header() {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    async function fetchCategories() {
+      const fetchedCategories = await getAllCategories();
+      setCategories(fetchedCategories as any);
+    }
+    fetchCategories();
+  }, []);
+
   return (
     <header className="bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
@@ -12,12 +32,20 @@ export function Header() {
             ShopEase
           </Link>
           <nav className="hidden md:flex space-x-10 ml-10">
-            <Link
-              href="/categories"
-              className="text-gray-500 hover:text-gray-900"
-            >
-              Categories
-            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="flex items-center">
+                  Categories <ChevronDown className="ml-1 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {categories.map((category) => (
+                  <DropdownMenuItem key={category.id}>
+                    <Link href={`/${category.slug}`}>{category.name}</Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Link href="/deals" className="text-gray-500 hover:text-gray-900">
               Deals
             </Link>

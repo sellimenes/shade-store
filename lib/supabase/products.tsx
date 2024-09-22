@@ -1,11 +1,18 @@
 import { createClient } from "./server";
+import { getCategoryBySlug } from "./categories";
 
-export async function getProducts() {
+export async function getProductsByCategoryId(categoryId: number | null) {
+  if (categoryId === null) {
+    console.error("Category ID is null");
+    return [];
+  }
+
   const supabase = createClient();
 
   const { data, error } = await supabase
     .from("products")
     .select("*")
+    .eq("category_id", categoryId)
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -13,7 +20,6 @@ export async function getProducts() {
     return [];
   }
 
-  console.log("Fetched products:", data); // Add this line
   return data;
 }
 
