@@ -1,10 +1,16 @@
 import { ProductDetail } from "@/components/product-detail";
-import React from "react";
+import { getProductBySlug } from "@/lib/supabase/products";
 
-type Props = {};
+export default async function Product({
+  params,
+}: {
+  params: { product: string };
+}) {
+  const product = await getProductBySlug(params.product);
 
-const Product = (props: Props) => {
-  return <ProductDetail />;
-};
+  if (!product) {
+    return <div>Product not found</div>;
+  }
 
-export default Product;
+  return <ProductDetail product={product} />;
+}

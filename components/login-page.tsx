@@ -1,17 +1,31 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { login } from "@/hooks/auth";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export function LoginPage() {
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+
+  const handleSubmit = async (formData: FormData) => {
+    const result = await login(formData);
+    if (result.error) {
+      setError(result.error);
+    } else {
+      router.push("/");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Shade Store
+          ShopEase
         </h2>
         <h3 className="mt-2 text-center text-xl text-gray-600">
           Log in to your account
@@ -20,7 +34,10 @@ export function LoginPage() {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6" action="#" method="POST">
+          {error && (
+            <div className="mb-4 text-red-600 text-center">{error}</div>
+          )}
+          <form className="space-y-6" action={handleSubmit}>
             <div>
               <Label
                 htmlFor="email"
@@ -61,7 +78,6 @@ export function LoginPage() {
 
             <div>
               <Button
-                formAction={login}
                 type="submit"
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
@@ -76,7 +92,9 @@ export function LoginPage() {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or</span>
+                <span className="px-2 bg-white text-gray-500">
+                  Don't have an account?
+                </span>
               </div>
             </div>
 
@@ -85,7 +103,7 @@ export function LoginPage() {
                 href="/signup"
                 className="font-medium text-indigo-600 hover:text-indigo-500"
               >
-                Don't have an account? Sign up
+                Sign up here
               </Link>
             </div>
           </div>
