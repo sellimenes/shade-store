@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
@@ -13,17 +12,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-import {
-  ShoppingCart,
-  Search,
-  User,
-  Truck,
-  Package,
-  ArrowLeft,
-} from "lucide-react";
+import { Truck, Package, ArrowLeft } from "lucide-react";
 
 export function OrderDetail() {
-  const [order, setOrder] = useState({
+  const [order] = useState({
     id: "ORD12345",
     date: "2023-07-15",
     status: "Shipped",
@@ -47,7 +39,7 @@ export function OrderDetail() {
     ],
   });
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case "Pending":
         return "bg-yellow-100 text-yellow-800";

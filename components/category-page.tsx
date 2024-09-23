@@ -21,6 +21,7 @@ interface Product {
   price: number;
   image: string;
   slug: string;
+  cover_img: string;
 }
 
 interface Category {
@@ -36,7 +37,7 @@ export function CategoryPage({ category: categorySlug }: { category: string }) {
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [sortBy, setSortBy] = useState("featured");
   const [filterBrands, setFilterBrands] = useState<string[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  // const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     async function fetchCategoryAndProducts() {
@@ -167,6 +168,7 @@ export function CategoryPage({ category: categorySlug }: { category: string }) {
                 product={{
                   ...product,
                   category_slug: categorySlug,
+                  cover_img: product.image, // Assuming cover_img is the same as image
                 }}
               />
             ))}

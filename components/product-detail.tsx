@@ -250,7 +250,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                   <p>
                     These headphones are perfect for both casual listeners and
                     audiophiles who demand the best sound quality. Whether
-                    you're working from home, commuting, or relaxing, these
+                    you&apos;re working from home, commuting, or relaxing, these
                     headphones will elevate your audio experience to new
                     heights.
                   </p>
@@ -299,10 +299,11 @@ export function ProductDetail({ product }: ProductDetailProps) {
                 <Card key={product}>
                   <CardHeader>
                     <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
-                      <img
+                      <Image
                         src={`/placeholder.svg?height=300&width=300`}
                         alt={`Related Product ${product}`}
-                        className="h-full w-full object-cover object-center"
+                        width={500}
+                        height={300}
                       />
                     </div>
                   </CardHeader>

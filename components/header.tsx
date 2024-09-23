@@ -13,13 +13,19 @@ import {
 import { ShoppingCart, Search, User, ChevronDown } from "lucide-react";
 import { getAllCategories } from "@/lib/supabase/categories";
 
+interface Category {
+  id: string | number;
+  slug: string;
+  name: string;
+}
+
 export function Header() {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     async function fetchCategories() {
       const fetchedCategories = await getAllCategories();
-      setCategories(fetchedCategories as any);
+      setCategories(fetchedCategories as Category[]);
     }
     fetchCategories();
   }, []);
@@ -39,17 +45,11 @@ export function Header() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                {categories.map(
-                  (category: {
-                    id: string | number;
-                    slug: string;
-                    name: string;
-                  }) => (
-                    <DropdownMenuItem key={category.id}>
-                      <Link href={`/${category.slug}`}>{category.name}</Link>
-                    </DropdownMenuItem>
-                  )
-                )}
+                {categories.map((category: Category) => (
+                  <DropdownMenuItem key={category.id}>
+                    <Link href={`/${category.slug}`}>{category.name}</Link>
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
             <Link href="/deals" className="text-gray-500 hover:text-gray-900">

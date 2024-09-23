@@ -1,5 +1,4 @@
 import { createClient } from "./server";
-import { getCategoryBySlug } from "./categories";
 
 export async function getProductsByCategoryId(categoryId: number | null) {
   if (categoryId === null) {

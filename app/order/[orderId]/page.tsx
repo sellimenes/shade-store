@@ -1,9 +1,6 @@
 import { OrderDetail } from "@/components/order-detail";
-import React from "react";
 
-type Props = {};
-
-const OrderDetailPage = (props: Props) => {
+const OrderDetailPage = (): JSX.Element => {
   return <OrderDetail />;
 };
 
