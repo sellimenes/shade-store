@@ -100,3 +100,20 @@ export async function getUserId(authId: string) {
 
   return data.id
 }
+
+export async function getUser() {
+  const supabase = createClient()
+  const user = await supabase.auth.getUser();
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('auth_id', user?.data?.user?.id)
+    .single()
+
+  if (error) {
+    console.error('Error fetching user:', error)
+    return null
+  }
+
+  return data
+}
