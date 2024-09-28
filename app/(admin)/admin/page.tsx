@@ -1,8 +1,4 @@
-import React from "react";
-
-type Props = {};
-
-const Admin = (props: Props) => {
+const Admin = () => {
   return <div>Admin</div>;
 };
 
