@@ -11,45 +11,55 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { ShoppingCart, Trash2, Plus, Minus } from "lucide-react";
+import { updateCartItemQuantity, removeFromCart } from "@/lib/supabase/cart";
 
-const initialCartItems = [
-  {
-    id: 1,
-    name: "Wireless Headphones",
-    price: 199.99,
-    quantity: 1,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 2,
-    name: "Bluetooth Speaker",
-    price: 89.99,
-    quantity: 2,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-];
+export function CartPage({
+  cartItems,
+  cartTotal,
+}: {
+  cartItems: any[];
+  cartTotal: number;
+}) {
+  console.log(cartItems);
+  const [localCartItems, setLocalCartItems] = useState(cartItems);
+  const [localCartTotal, setLocalCartTotal] = useState(cartTotal);
 
-export function CartPage() {
-  const [cartItems, setCartItems] = useState(initialCartItems);
+  const updateQuantity = async (productId: number, newQuantity: number) => {
+    if (newQuantity > 0) {
+      const success = await updateCartItemQuantity(productId, newQuantity);
+      if (success) {
+        setLocalCartItems((prevItems) =>
+          prevItems.map((item) =>
+            item.product_id === productId
+              ? { ...item, quantity: newQuantity }
+              : item
+          )
+        );
+        updateTotal();
+      }
+    }
+  };
 
-  const updateQuantity = (id: number, newQuantity: number) => {
-    setCartItems((items) =>
-      items.map((item) =>
-        item.id === id ? { ...item, quantity: Math.max(0, newQuantity) } : item
-      )
+  const removeItem = async (productId: number) => {
+    const success = await removeFromCart(productId);
+    if (success) {
+      setLocalCartItems((prevItems) =>
+        prevItems.filter((item) => item.product_id !== productId)
+      );
+      updateTotal();
+    }
+  };
+
+  const updateTotal = () => {
+    const newTotal = localCartItems.reduce(
+      (sum, item) => sum + item.products.price * item.quantity,
+      0
     );
+    setLocalCartTotal(newTotal);
   };
 
-  const removeItem = (id: number) => {
-    setCartItems((items) => items.filter((item) => item.id !== id));
-  };
-
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-  const tax = subtotal * 0.1; // Assuming 10% tax
-  const total = subtotal + tax;
+  const tax = localCartTotal * 0.1; // Assuming 10% tax
+  const total = localCartTotal + tax;
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -59,7 +69,7 @@ export function CartPage() {
             Your Cart
           </h1>
 
-          {cartItems.length === 0 ? (
+          {localCartItems.length === 0 ? (
             <div className="text-center py-12">
               <ShoppingCart className="mx-auto h-12 w-12 text-gray-400" />
               <h2 className="mt-2 text-lg font-medium text-gray-900">
@@ -82,29 +92,32 @@ export function CartPage() {
                     <CardTitle>Cart Items</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    {cartItems.map((item) => (
+                    {localCartItems.map((item) => (
                       <div
-                        key={item.id}
+                        key={item.product_id}
                         className="flex items-center py-6 border-b last:border-b-0"
                       >
                         <img
-                          src={item.image}
-                          alt={item.name}
+                          src={item.products.image}
+                          alt={item.products.name}
                           className="w-24 h-24 object-cover rounded"
                         />
                         <div className="ml-4 flex-1">
                           <h3 className="text-lg font-medium text-gray-900">
-                            {item.name}
+                            {item.products.name}
                           </h3>
                           <p className="mt-1 text-sm text-gray-500">
-                            ${item.price.toFixed(2)}
+                            ${item.products.price.toFixed(2)}
                           </p>
                           <div className="mt-2 flex items-center">
                             <Button
                               variant="outline"
                               size="icon"
                               onClick={() =>
-                                updateQuantity(item.id, item.quantity - 1)
+                                updateQuantity(
+                                  item.product_id,
+                                  item.quantity - 1
+                                )
                               }
                             >
                               <Minus className="h-4 w-4" />
@@ -116,7 +129,10 @@ export function CartPage() {
                               variant="outline"
                               size="icon"
                               onClick={() =>
-                                updateQuantity(item.id, item.quantity + 1)
+                                updateQuantity(
+                                  item.product_id,
+                                  item.quantity + 1
+                                )
                               }
                             >
                               <Plus className="h-4 w-4" />
@@ -125,12 +141,12 @@ export function CartPage() {
                         </div>
                         <div className="ml-4">
                           <p className="text-lg font-medium text-gray-900">
-                            ${(item.price * item.quantity).toFixed(2)}
+                            ${(item.products.price * item.quantity).toFixed(2)}
                           </p>
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => removeItem(item.id)}
+                            onClick={() => removeItem(item.product_id)}
                             className="mt-2"
                           >
                             <Trash2 className="h-5 w-5 text-red-500" />
@@ -150,7 +166,7 @@ export function CartPage() {
                     <div className="space-y-2">
                       <div className="flex justify-between">
                         <span>Subtotal</span>
-                        <span>${subtotal.toFixed(2)}</span>
+                        <span>${localCartTotal.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Tax</span>

@@ -85,12 +85,20 @@ async function addUserInfo(userId: string, userData: { email: string; name: stri
   return data.id
 }
 
-export async function getUserId(authId: string) {
+export async function getUserId() {
   const supabase = createClient()
+  
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    console.error('No authenticated user found')
+    return null
+  }
+
   const { data, error } = await supabase
     .from('users')
     .select('id')
-    .eq('auth_id', authId)
+    .eq('auth_id', user.id)
     .single()
 
   if (error) {
