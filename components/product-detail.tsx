@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 import { Star, Plus, Minus } from "lucide-react";
 import Image from "next/image";
+import { addToCart } from "@/lib/supabase/cart";
 
 interface ProductDetailProps {
   product: {
@@ -54,6 +55,16 @@ export function ProductDetail({ product }: ProductDetailProps) {
   const incrementQuantity = () => setQuantity((prev) => prev + 1);
   const decrementQuantity = () =>
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+
+  const handleAddToCart = async () => {
+    const success = await addToCart(parseInt(product.id), quantity);
+    if (success) {
+      // You can add a toast notification or some other feedback here
+      console.log("Product added to cart successfully");
+    } else {
+      console.error("Failed to add product to cart");
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -218,7 +229,10 @@ export function ProductDetail({ product }: ProductDetailProps) {
               </div>
 
               <div className="mt-10 flex sm:flex-col1">
-                <Button className="max-w-xs flex-1 bg-indigo-600 hover:bg-indigo-700">
+                <Button
+                  className="max-w-xs flex-1 bg-indigo-600 hover:bg-indigo-700"
+                  onClick={handleAddToCart}
+                >
                   Add to cart
                 </Button>
                 <Button variant="secondary" className="max-w-xs flex-1 ml-3">

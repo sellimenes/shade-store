@@ -52,16 +52,41 @@ export const addToCart = async (productId: number, quantity: number) => {
     return false;
   }
 
-  const { error } = await supabase
+  // First, check if the item already exists in the cart
+  const { data: existingItem, error: fetchError } = await supabase
     .from("cart_items")
-    .upsert(
-      { product_id: productId, quantity, cart_id: cartId },
-      { onConflict: 'cart_id,product_id', ignoreDuplicates: false }
-    );
+    .select("quantity")
+    .eq("cart_id", cartId)
+    .eq("product_id", productId)
+    .single();
 
-  if (error) {
-    console.error("Error adding to cart:", error);
+  if (fetchError && fetchError.code !== 'PGRST116') {
+    console.error("Error checking existing item:", fetchError);
     return false;
+  }
+
+  if (existingItem) {
+    // If the item exists, update the quantity
+    const { error: updateError } = await supabase
+      .from("cart_items")
+      .update({ quantity: existingItem.quantity + quantity })
+      .eq("cart_id", cartId)
+      .eq("product_id", productId);
+
+    if (updateError) {
+      console.error("Error updating cart item:", updateError);
+      return false;
+    }
+  } else {
+    // If the item doesn't exist, insert a new row
+    const { error: insertError } = await supabase
+      .from("cart_items")
+      .insert({ product_id: productId, quantity, cart_id: cartId });
+
+    if (insertError) {
+      console.error("Error inserting new cart item:", insertError);
+      return false;
+    }
   }
 
   return true;
