@@ -13,14 +13,24 @@ import Link from "next/link";
 import { ShoppingCart, Trash2, Plus, Minus } from "lucide-react";
 import { updateCartItemQuantity, removeFromCart } from "@/lib/supabase/cart";
 
+interface CartItem {
+  product_id: number;
+  quantity: number;
+  products: {
+    id: number;
+    name: string;
+    price: number;
+    image: string;
+  };
+}
+
 export function CartPage({
   cartItems,
   cartTotal,
 }: {
-  cartItems: any[];
+  cartItems: CartItem[];
   cartTotal: number;
 }) {
-  console.log(cartItems);
   const [localCartItems, setLocalCartItems] = useState(cartItems);
   const [localCartTotal, setLocalCartTotal] = useState(cartTotal);
 
