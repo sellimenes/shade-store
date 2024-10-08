@@ -174,15 +174,13 @@ export function ProductDetail({ product }: ProductDetailProps) {
               <div className="mt-6">
                 <h3 className="sr-only">Description</h3>
                 <p className="text-base text-gray-900">
-                  Experience crystal-clear audio with our Premium Wireless
-                  Headphones. Featuring advanced noise-cancellation technology,
-                  comfortable over-ear design, and long-lasting battery life,
-                  these headphones are perfect for music lovers and
-                  professionals alike.
+                  Atmosfer Gece Lambası Ses Kontrolü Yatak Odası Başucu Deforme
+                  Lamba Başucu Yatak Odası Arkadaşı Işık Çocuklar için Yatak
+                  Odası Ev Dekor
                 </p>
               </div>
 
-              <div className="mt-6">
+              {/* <div className="mt-6">
                 <div className="flex items-center">
                   <h3 className="text-sm text-gray-600 font-medium">Color:</h3>
                   <p className="ml-2 text-sm text-gray-900">Midnight Black</p>
@@ -201,7 +199,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                     )
                   )}
                 </div>
-              </div>
+              </div> */}
 
               <div className="mt-6">
                 <div className="flex items-center">
@@ -252,22 +250,110 @@ export function ProductDetail({ product }: ProductDetailProps) {
                   value="description"
                   className="mt-4 prose prose-sm text-gray-500"
                 >
-                  <p>
-                    Our Premium Wireless Headphones offer an unparalleled audio
-                    experience. With advanced noise-cancellation technology, you
-                    can immerse yourself in your music, podcasts, or calls
-                    without any distractions. The over-ear design ensures
-                    comfort for extended listening sessions, while the
-                    long-lasting battery life keeps you connected throughout the
-                    day.
-                  </p>
-                  <p>
-                    These headphones are perfect for both casual listeners and
-                    audiophiles who demand the best sound quality. Whether
-                    you&apos;re working from home, commuting, or relaxing, these
-                    headphones will elevate your audio experience to new
-                    heights.
-                  </p>
+                  <div>
+                    <h1>Genel Bakış</h1>
+                    <p>
+                      Atmosfer gece lambası ses kontrolü yatak odası başucu
+                      deforme lamba başucu yatak odası arkadaşı ışık çocuklar
+                      için yatak odası ev dekor
+                    </p>
+
+                    <h2>Özellikler:</h2>
+                    <ol>
+                      <li>
+                        <strong>Büyüleyici deniz deneyimi:</strong> Yaratıcı
+                        denizanası ışığı, gerçek yüzme hareketi ve tam renkli,
+                        otomatik bisiklet gradyan aydınlatma efektleri ile
+                        okyanus sakinliğini evinize getirir ve herhangi bir
+                        odada sakin bir sualtı ortamı yaratır.
+                      </li>
+                      <li>
+                        <strong>Çift modlu yenilik:</strong> İki etkileşimli
+                        modda atmosfer gece ışığıyla iletişim kurun: sürekli
+                        sakin olmak için eller serbest otomatik ayar ve en
+                        sevdiğiniz müzikle LED ışık 'ı hayata geçiren ses
+                        etkinleştirilmiş bir mod, alanınıza dinamik yetenek
+                        ekleme.
+                      </li>
+                      <li>
+                        <strong>Sezgisel tasarım ve rotasyon:</strong> Dokuz
+                        dönebilir dokunaca, LED akıllı denizanası gece lambası,
+                        bir denizanasının doğal hareketini taklit eder, zarif ve
+                        hipnotik dansı ile büyüleyici izleyicileri, hayal gücü
+                        ve merak uyandırmak için mükemmeldir.
+                      </li>
+                      <li>
+                        <strong>Genişletilmiş pil ömrü ve çok yönlülük:</strong>{" "}
+                        Yatak odası başucu deforme lamba uzun ömürlü aydınlatma
+                        sunan bir 1000mAh lityum pil ve kullanışlı tip-c şarj
+                        ile donatılmıştır. Bir komidin, kafelerde, barlarda veya
+                        kamp gezileri ve sütlü çay standları gibi dış mekan
+                        ayarlarında atmosferik aydınlatma için çok yönlü.
+                      </li>
+                      <li>
+                        <strong>Sevimli ve güvenli yapı:</strong> Bu karikatür
+                        denizanası şekli gece lambası, hem çocuklara hem de
+                        yetişkinlere sevinç veren sevimli, parlayan bir form ile
+                        hem asılı hem de ayakta kurulum için tasarlanmıştır.
+                        Pürüzsüz, yuvarlak kenarları, kullanım sırasında veya
+                        ışığı ayarlarken herhangi bir el yaralanmasını önleyerek
+                        güvenliği sağlar.
+                      </li>
+                    </ol>
+
+                    <h2>Şartname:</h2>
+                    <ul>
+                      <li>
+                        <strong>Menşei:</strong> ankara çin
+                      </li>
+                      <li>
+                        <strong>Ampuller dahil:</strong> evet
+                      </li>
+                      <li>
+                        <strong>Şekil:</strong> mantar
+                      </li>
+                      <li>
+                        <strong>Tip:</strong> atmosfer
+                      </li>
+                      <li>
+                        <strong>Sertifikasyon:</strong> ce
+                      </li>
+                      <li>
+                        <strong>Gövde malzemesi:</strong> plastik
+                      </li>
+                      <li>
+                        <strong>Tip (isteğe bağlı):</strong> asılı tip, Asılı
+                        tip + taban
+                      </li>
+                      <li>
+                        <strong>Boyut:</strong> 85x85x16 mm/3.35x3.35x6.54inch
+                      </li>
+                      <li>
+                        <strong>Stil:</strong> Modern ve basit
+                      </li>
+                      <li>
+                        <strong>Model:</strong> ses aktive denizanası ışık/gece
+                        lambası/atmosfer ışığı
+                      </li>
+                      <li>
+                        <strong>Fonksiyon:</strong> tam renkli degrade, akıllı
+                        dokunmatik ayaklar
+                      </li>
+                      <li>
+                        <strong>Kurulum yöntemi:</strong> asılabilir veya inşa
+                        edilebilir
+                      </li>
+                      <li>
+                        <strong>Patent:</strong> + CE + FCC + ROHS
+                      </li>
+                    </ul>
+
+                    <h3>Not:</h3>
+                    <p>
+                      Farklı monitör ve ışık efekti nedeniyle, öğenin gerçek
+                      rengi resimlerde g
+                    </p>
+                  </div>
                 </TabsContent>
                 <TabsContent
                   value="specifications"
