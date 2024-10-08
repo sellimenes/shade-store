@@ -189,7 +189,9 @@ export function CartPage({
                     </div>
                   </CardContent>
                   <CardFooter>
-                    <Button className="w-full">Proceed to Checkout</Button>
+                    <Link href="/checkout">
+                      <Button className="w-full">Proceed to Checkout</Button>
+                    </Link>
                   </CardFooter>
                 </Card>
                 <div className="mt-6">
