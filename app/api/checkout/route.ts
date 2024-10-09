@@ -1,7 +1,8 @@
 'use server';
 import crypto from 'crypto';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(req: any) {
+export async function POST(req: NextRequest) {
   const text = await req.text();
   const params = new URLSearchParams(text);
   const data: { [key: string]: string } = {};
@@ -14,7 +15,7 @@ export async function POST(req: any) {
   const forwarded = req.headers.get('x-forwarded-for');
   const user_ip = forwarded
     ? forwarded.split(',')[0].trim()
-    : req.socket.remoteAddress;
+    : req.ip || '';
 
   const merchant_id = process.env.PAYTR_MERCHANT_ID!;
   const merchant_key = process.env.PAYTR_MERCHANT_KEY!;
@@ -96,14 +97,14 @@ export async function POST(req: any) {
     const iframeHTML = `
       <iframe src="https://www.paytr.com/odeme/guvenli/${iframeToken}" frameborder="0" allowtransparency="true" scrolling="no" style="width: 100%; height: 600px;"></iframe>
     `;
-    return new Response(iframeHTML, {
+    return new NextResponse(iframeHTML, {
       status: 200,
       headers: {
         'Content-Type': 'text/html',
       },
     });
   } else {
-    return new Response(JSON.stringify(res_data), {
+    return new NextResponse(JSON.stringify(res_data), {
       status: 400,
       headers: {
         'Content-Type': 'application/json',
