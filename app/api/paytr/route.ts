@@ -1,5 +1,20 @@
 // import crypto from 'crypto';
 
+import { NextRequest, NextResponse } from 'next/server';
+
+export async function POST(req: NextRequest) {
+    console.log('req', req);
+    const text = await req.text();
+    console.log('text', text);
+
+    return new NextResponse('OK', {
+        status: 200,
+        headers: {
+            'Content-Type': 'text/plain',
+        },
+    });
+}
+
 // export async function POST(req: any) {
 //   const text = await req.text();
 //   const params = new URLSearchParams(text);
