@@ -271,7 +271,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                         <strong>Çift modlu yenilik:</strong> İki etkileşimli
                         modda atmosfer gece ışığıyla iletişim kurun: sürekli
                         sakin olmak için eller serbest otomatik ayar ve en
-                        sevdiğiniz müzikle LED ışık 'ı hayata geçiren ses
+                        sevdiğiniz müzikle LED ışık&apos;ı hayata geçiren ses
                         etkinleştirilmiş bir mod, alanınıza dinamik yetenek
                         ekleme.
                       </li>

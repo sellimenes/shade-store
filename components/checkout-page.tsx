@@ -1,15 +1,21 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { CreditCard, ShoppingCart } from 'lucide-react'
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ShoppingCart } from "lucide-react";
 
 export function CheckoutPageComponent() {
-  const [paymentMethod, setPaymentMethod] = useState("credit-card")
+  const [paymentMethod, setPaymentMethod] = useState("credit-card");
 
   return (
     <div className="min-h-screen bg-gray-100 py-8">
@@ -57,7 +63,11 @@ export function CheckoutPageComponent() {
               </div>
               <div>
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="john.doe@example.com" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="john.doe@example.com"
+                />
               </div>
               <div>
                 <Label htmlFor="address">Address</Label>
@@ -88,7 +98,10 @@ export function CheckoutPageComponent() {
               </div>
 
               <h2 className="text-xl font-semibold mt-8 mb-4">Payment</h2>
-              <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
+              <RadioGroup
+                value={paymentMethod}
+                onValueChange={setPaymentMethod}
+              >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="credit-card" id="credit-card" />
                   <Label htmlFor="credit-card">Credit Card</Label>
@@ -126,5 +139,5 @@ export function CheckoutPageComponent() {
         </div>
       </div>
     </div>
-  )
+  );
 }
