@@ -14,6 +14,13 @@ import { ShoppingCart } from "lucide-react";
 export default async function CheckoutPage() {
   const cartItems = await getCartItems();
 
+  // payment_amount hesaplama
+  const shippingCost = 5.0;
+  const payment_amount = cartItems.reduce(
+    (acc, item) => acc + item.products.price * item.quantity,
+    shippingCost
+  );
+
   return (
     <div className="min-h-screen bg-gray-100 py-8">
       <div className="container mx-auto px-4">
@@ -38,13 +45,7 @@ export default async function CheckoutPage() {
               <div className="border-t pt-4">
                 <div className="flex justify-between font-semibold">
                   <span>Total</span>
-                  <span>
-                    $
-                    {cartItems.reduce(
-                      (acc, item) => acc + item.products.price * item.quantity,
-                      5
-                    )}
-                  </span>
+                  <span>${payment_amount}</span>
                 </div>
               </div>
             </div>
@@ -54,6 +55,11 @@ export default async function CheckoutPage() {
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold mb-4">Shipping Information</h2>
             <form action="/api/checkout" method="POST" className="space-y-4">
+              <input
+                type="hidden"
+                name="payment_amount"
+                value={payment_amount}
+              />
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="first-name">First Name</Label>
