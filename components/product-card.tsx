@@ -35,7 +35,9 @@ export function ProductCard({ product }: ProductCardProps) {
         <CardContent>
           <CardTitle>{product.name}</CardTitle>
           <p className="text-sm text-gray-500 mt-1">{product.description}</p>
-          <p className="text-2xl font-bold mt-2">${product.price.toFixed(2)}</p>
+          <p className="text-2xl font-bold mt-2">
+            {product.price.toFixed(2)} ₺
+          </p>
         </CardContent>
         <CardFooter>
           <Button className="w-full">View Details</Button>

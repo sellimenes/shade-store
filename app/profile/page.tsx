@@ -30,12 +30,11 @@ export default function ProfilePage() {
     }
   }
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Skeleton />;
   if (!user) return <div>User not found</div>;
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">User Profile</h1>
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -51,6 +50,26 @@ export default function ProfilePage() {
         </div>
         <div className="mb-4">
           <Button onClick={() => logout()}>Logout</Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function Skeleton() {
+  return (
+    <div className="container mx-auto p-4">
+      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 animate-pulse">
+        <div className="mb-4">
+          <div className="h-4 bg-gray-300 rounded w-1/4 mb-2"></div>
+          <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+        </div>
+        <div className="mb-4">
+          <div className="h-4 bg-gray-300 rounded w-1/4 mb-2"></div>
+          <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+        </div>
+        <div className="mb-4">
+          <div className="h-10 bg-gray-300 rounded w-1/4"></div>
         </div>
       </div>
     </div>

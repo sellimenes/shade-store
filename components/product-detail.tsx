@@ -69,7 +69,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
   return (
     <div className="flex flex-col min-h-screen">
       <div className="flex-grow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start">
             {/* Image gallery */}
             <div className="flex flex-col">
@@ -142,7 +142,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
               <div className="mt-3">
                 <h2 className="sr-only">Product information</h2>
                 <p className="text-3xl text-gray-900">
-                  ${product.price.toFixed(2)}
+                  {product.price.toFixed(2)} ₺
                 </p>
               </div>
 

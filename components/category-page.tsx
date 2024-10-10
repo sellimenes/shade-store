@@ -37,7 +37,6 @@ export function CategoryPage({ category: categorySlug }: { category: string }) {
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [sortBy, setSortBy] = useState("featured");
   const [filterBrands, setFilterBrands] = useState<string[]>([]);
-  // const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     async function fetchCategoryAndProducts() {
@@ -56,10 +55,6 @@ export function CategoryPage({ category: categorySlug }: { category: string }) {
     fetchCategoryAndProducts();
   }, [categorySlug]);
 
-  useEffect(() => {
-    console.log(products);
-  }, [products]);
-
   const handlePriceChange = (newValues: number[]) => {
     setPriceRange(newValues);
   };
@@ -71,31 +66,17 @@ export function CategoryPage({ category: categorySlug }: { category: string }) {
   };
 
   const filteredProducts = products;
-  // .filter(
-  //   (product) =>
-  //     product.price >= priceRange[0] &&
-  //     product.price <= priceRange[1] &&
-  //     (filterBrands.length === 0 ||
-  //       filterBrands.includes(product.name.split(" ")[0])) &&
-  //     product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  // )
-  // .sort((a, b) => {
-  //   if (sortBy === "price-low-high") return a.price - b.price;
-  //   if (sortBy === "price-high-low") return b.price - a.price;
-  //   if (sortBy === "rating") return b.rating - a.rating;
-  //   return 0; // "featured" or default
-  // });
 
   const uniqueBrands = Array.from(
     new Set(products.map((product) => product.name.split(" ")[0]))
   );
 
   if (loading) {
-    return <div className="text-center py-10">Loading...</div>;
+    return <Skeleton />;
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <h1 className="text-3xl font-extrabold text-gray-900 mb-8">
         {category ? category.name : "Loading..."}
       </h1>
@@ -173,6 +154,38 @@ export function CategoryPage({ category: categorySlug }: { category: string }) {
               />
             ))}
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function Skeleton() {
+  return (
+    <div className="animate-pulse flex flex-col md:flex-row gap-8">
+      <div className="w-full md:w-64 space-y-6">
+        <div>
+          <div className="h-6 bg-gray-300 rounded w-3/4 mb-2"></div>
+          <div className="h-6 bg-gray-300 rounded w-1/2"></div>
+        </div>
+        <div>
+          <div className="h-6 bg-gray-300 rounded w-3/4 mb-2"></div>
+          <div className="h-6 bg-gray-300 rounded w-1/2"></div>
+        </div>
+      </div>
+      <div className="flex-1">
+        <div className="flex justify-between items-center mb-6">
+          <div className="h-6 bg-gray-300 rounded w-1/4"></div>
+          <div className="h-6 bg-gray-300 rounded w-1/6"></div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className="flex flex-col space-y-4">
+              <div className="h-48 bg-gray-300 rounded"></div>
+              <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+              <div className="h-6 bg-gray-300 rounded w-1/2"></div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

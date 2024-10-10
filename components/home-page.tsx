@@ -13,7 +13,7 @@ export function HomePage() {
   return (
     <>
       <section className="bg-indigo-700 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
           <h1 className="text-4xl font-extrabold sm:text-5xl md:text-6xl">
             Welcome to ShopEase
           </h1>
@@ -32,7 +32,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <h2 className="text-3xl font-extrabold text-gray-900 mb-8">
           Featured Products
         </h2>

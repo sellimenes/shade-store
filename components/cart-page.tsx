@@ -72,9 +72,9 @@ export function CartPage({
   const total = localCartTotal + tax;
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col container mx-auto">
       <div className="flex-grow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="px-4 sm:px-6 lg:px-8 py-8">
           <h1 className="text-3xl font-extrabold text-gray-900 mb-8">
             Your Cart
           </h1>
@@ -101,70 +101,77 @@ export function CartPage({
                   <CardHeader>
                     <CardTitle>Cart Items</CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    {localCartItems.map((item) => (
-                      <div
-                        key={item.product_id}
-                        className="flex items-center py-6 border-b last:border-b-0"
-                      >
-                        <img
-                          src={item.products.image}
-                          alt={item.products.name}
-                          className="w-24 h-24 object-cover rounded"
-                        />
-                        <div className="ml-4 flex-1">
-                          <h3 className="text-lg font-medium text-gray-900">
-                            {item.products.name}
-                          </h3>
-                          <p className="mt-1 text-sm text-gray-500">
-                            ${item.products.price.toFixed(2)}
-                          </p>
-                          <div className="mt-2 flex items-center">
+                  {cartItems.length > 0 ? (
+                    <CardContent>
+                      {localCartItems.map((item) => (
+                        <div
+                          key={item.product_id}
+                          className="flex items-center py-6 border-b last:border-b-0"
+                        >
+                          <img
+                            src={item.products.image}
+                            alt={item.products.name}
+                            className="w-24 h-24 object-cover rounded"
+                          />
+                          <div className="ml-4 flex-1">
+                            <h3 className="text-lg font-medium text-gray-900">
+                              {item.products.name}
+                            </h3>
+                            <p className="mt-1 text-sm text-gray-500">
+                              ${item.products.price.toFixed(2)}
+                            </p>
+                            <div className="mt-2 flex items-center">
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={() =>
+                                  updateQuantity(
+                                    item.product_id,
+                                    item.quantity - 1
+                                  )
+                                }
+                              >
+                                <Minus className="h-4 w-4" />
+                              </Button>
+                              <span className="mx-2 text-gray-700">
+                                {item.quantity}
+                              </span>
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={() =>
+                                  updateQuantity(
+                                    item.product_id,
+                                    item.quantity + 1
+                                  )
+                                }
+                              >
+                                <Plus className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="ml-4">
+                            <p className="text-lg font-medium text-gray-900">
+                              $
+                              {(item.products.price * item.quantity).toFixed(2)}
+                            </p>
                             <Button
-                              variant="outline"
+                              variant="ghost"
                               size="icon"
-                              onClick={() =>
-                                updateQuantity(
-                                  item.product_id,
-                                  item.quantity - 1
-                                )
-                              }
+                              onClick={() => removeItem(item.product_id)}
+                              className="mt-2"
                             >
-                              <Minus className="h-4 w-4" />
-                            </Button>
-                            <span className="mx-2 text-gray-700">
-                              {item.quantity}
-                            </span>
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() =>
-                                updateQuantity(
-                                  item.product_id,
-                                  item.quantity + 1
-                                )
-                              }
-                            >
-                              <Plus className="h-4 w-4" />
+                              <Trash2 className="h-5 w-5 text-red-500" />
                             </Button>
                           </div>
                         </div>
-                        <div className="ml-4">
-                          <p className="text-lg font-medium text-gray-900">
-                            ${(item.products.price * item.quantity).toFixed(2)}
-                          </p>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => removeItem(item.product_id)}
-                            className="mt-2"
-                          >
-                            <Trash2 className="h-5 w-5 text-red-500" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </CardContent>
+                      ))}
+                    </CardContent>
+                  ) : (
+                    Array.from({ length: 3 }).map((_, i) => (
+                      <Skeleton key={i} />
+                    ))
+                  )}
                 </Card>
               </div>
               <div>
@@ -205,6 +212,27 @@ export function CartPage({
             </div>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+export function Skeleton() {
+  return (
+    <div className="animate-pulse flex items-center py-6 border-b last:border-b-0">
+      <div className="w-24 h-24 bg-gray-300 rounded"></div>
+      <div className="ml-4 flex-1">
+        <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+        <div className="mt-1 h-4 bg-gray-300 rounded w-1/2"></div>
+        <div className="mt-2 flex items-center">
+          <div className="h-8 w-8 bg-gray-300 rounded-full"></div>
+          <div className="mx-2 h-6 bg-gray-300 rounded w-8"></div>
+          <div className="h-8 w-8 bg-gray-300 rounded-full"></div>
+        </div>
+      </div>
+      <div className="ml-4">
+        <div className="h-6 bg-gray-300 rounded w-16"></div>
+        <div className="mt-2 h-8 w-8 bg-gray-300 rounded-full"></div>
       </div>
     </div>
   );

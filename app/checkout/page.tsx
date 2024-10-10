@@ -46,17 +46,17 @@ export default async function CheckoutPage() {
                   <span>
                     {item.products.name} x {item.quantity}
                   </span>
-                  <span>${item.products.price * item.quantity}</span>
+                  <span>{item.products.price * item.quantity} ₺</span>
                 </div>
               ))}
               <div className="flex justify-between">
                 <span>Shipping</span>
-                <span>$5.00</span>
+                <span>5.00 ₺</span>
               </div>
               <div className="border-t pt-4">
                 <div className="flex justify-between font-semibold">
-                  <span>Total</span>
-                  <span>${payment_amount}</span>
+                  <span className="">Total</span>
+                  <span>{payment_amount} ₺</span>
                 </div>
               </div>
             </div>

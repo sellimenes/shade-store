@@ -3,84 +3,66 @@ import Link from "next/link";
 export function Footer() {
   return (
     <footer className="bg-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
-              Company
+              Politikalar
             </h3>
             <ul className="mt-4 space-y-4">
               <li>
                 <Link
-                  href="/about"
+                  href="/gizlilik-ve-guvenlik"
                   className="text-base text-gray-500 hover:text-gray-900"
                 >
-                  About
+                  Gizlilik ve Güvenlik Politikası
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/careers"
+                  href="/odeme-ve-teslimat"
                   className="text-base text-gray-500 hover:text-gray-900"
                 >
-                  Careers
+                  Ödeme ve Teslimat
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/hakkimizda"
+                  className="text-base text-gray-500 hover:text-gray-900"
+                >
+                  Hakkımızda
                 </Link>
               </li>
             </ul>
           </div>
           <div>
             <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
-              Support
+              İletişim
             </h3>
             <ul className="mt-4 space-y-4">
-              <li>
-                <Link
-                  href="/contact"
-                  className="text-base text-gray-500 hover:text-gray-900"
-                >
-                  Contact
-                </Link>
+              <li className="text-base text-gray-500 hover:text-gray-900">
+                {`Unvan: ${process.env.COMPANY_NAME}`}
               </li>
-              <li>
-                <Link
-                  href="/faq"
-                  className="text-base text-gray-500 hover:text-gray-900"
-                >
-                  FAQ
-                </Link>
+              <li className="text-base text-gray-500 hover:text-gray-900">
+                {`Adres: ${process.env.COMPANY_ADDRESS}`}
               </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
-              Legal
-            </h3>
-            <ul className="mt-4 space-y-4">
-              <li>
-                <Link
-                  href="/privacy"
-                  className="text-base text-gray-500 hover:text-gray-900"
-                >
-                  Privacy
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/terms"
-                  className="text-base text-gray-500 hover:text-gray-900"
-                >
-                  Terms
-                </Link>
+              <li className="text-base text-gray-500 hover:text-gray-900">
+                {`E-posta: ${process.env.CONTACT_MAIL}`}
               </li>
             </ul>
           </div>
         </div>
         <div className="mt-8 border-t border-gray-200 pt-8 flex justify-between items-center">
           <p className="text-base text-gray-400">
-            &copy; 2023 ShopEase, Inc. All rights reserved.
+            {`© 2024 ${process.env.BRAND_NAME}. All rights reserved.`}
           </p>
           <div className="flex space-x-6">
-            <Link href="#" className="text-gray-400 hover:text-gray-500">
+            <Link
+              target="_blank"
+              href={process.env.FACEBOOK_URL || "#"}
+              className="text-gray-400 hover:text-gray-500"
+            >
               <span className="sr-only">Facebook</span>
               <svg
                 className="h-6 w-6"
@@ -95,7 +77,11 @@ export function Footer() {
                 />
               </svg>
             </Link>
-            <Link href="#" className="text-gray-400 hover:text-gray-500">
+            <Link
+              target="_blank"
+              href={process.env.INSTAGRAM_URL || "#"}
+              className="text-gray-400 hover:text-gray-500"
+            >
               <span className="sr-only">Instagram</span>
               <svg
                 className="h-6 w-6"
@@ -110,7 +96,11 @@ export function Footer() {
                 />
               </svg>
             </Link>
-            <Link href="#" className="text-gray-400 hover:text-gray-500">
+            <Link
+              target="_blank"
+              href={process.env.TWITTER_URL || "#"}
+              className="text-gray-400 hover:text-gray-500"
+            >
               <span className="sr-only">Twitter</span>
               <svg
                 className="h-6 w-6"
