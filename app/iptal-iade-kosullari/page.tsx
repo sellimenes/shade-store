@@ -1,8 +1,4 @@
-import React from "react";
-
-type Props = {};
-
-const IptalIadeKosullari = (props: Props) => {
+const IptalIadeKosullari = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4">İptal ve İade Koşulları</h1>
@@ -42,9 +38,9 @@ const IptalIadeKosullari = (props: Props) => {
         Ürün teslim edildikten sonra, alıcının ödeme yaptığı kredi kartının
         yetkisiz kişiler tarafından haksız olarak kullanıldığı tespit edilirse
         ve satılan ürün bedeli ilgili banka veya finans kuruluşu tarafından
-        Satıcı'ya ödenmez ise, Alıcı, sözleşme konusu ürünü 3 gün içerisinde
-        nakliye gideri Alıcı’ya ait olacak şekilde Satıcı’ya iade etmek
-        zorundadır.
+        Satıcı&apos;ya ödenmez ise, Alıcı, sözleşme konusu ürünü 3 gün
+        içerisinde nakliye gideri Alıcı’ya ait olacak şekilde Satıcı’ya iade
+        etmek zorundadır.
       </p>
       <h3 className="text-xl font-semibold mt-6 mb-4">
         ÖNGÖRÜLEMEYEN SEBEPLERLE ÜRÜN SÜRESİNDE TESLİM EDİLEMEZ İSE:
@@ -98,10 +94,10 @@ const IptalIadeKosullari = (props: Props) => {
         önce, tüketicinin onayı ile hizmetin ifasına başlanan hizmet
         sözleşmelerinde cayma hakkı kullanılamaz. Cayma hakkının kullanımından
         kaynaklanan masraflar SATICI’ ya aittir. Cayma hakkının kullanılması
-        için 14 (on dört) günlük süre içinde SATICI' ya iadeli taahhütlü posta,
-        faks veya eposta ile yazılı bildirimde bulunulması ve ürünün işbu
-        sözleşmede düzenlenen "Cayma Hakkı Kullanılamayacak Ürünler" hükümleri
-        çerçevesinde kullanılmamış olması şarttır.
+        için 14 (on dört) günlük süre içinde SATICI&apos; ya iadeli taahhütlü
+        posta, faks veya eposta ile yazılı bildirimde bulunulması ve ürünün işbu
+        sözleşmede düzenlenen &quot;Cayma Hakkı Kullanılamayacak Ürünler&quot;
+        hükümleri çerçevesinde kullanılmamış olması şarttır.
       </p>
       <h3 className="text-xl font-semibold mt-6 mb-4">
         CAYMA HAKKININ KULLANIMI:

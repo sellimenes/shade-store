@@ -1,8 +1,4 @@
-import React from "react";
-
-type Props = {};
-
-const GizlilikVeGuvenlik = (props: Props) => {
+const GizlilikVeGuvenlik = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4">
@@ -26,7 +22,7 @@ const GizlilikVeGuvenlik = (props: Props) => {
         kendisine gelen bilgilendirme iletisindeki linkle bildirim yapabilir.
         Mağazamız üzerinden veya eposta ile gerçekleştirilen onay sürecinde,
         üyelerimiz tarafından mağazamıza elektronik ortamdan iletilen kişisel
-        bilgiler, Üyelerimiz ile yaptığımız "Kullanıcı Sözleşmesi" ile
+        bilgiler, Üyelerimiz ile yaptığımız &quot;Kullanıcı Sözleşmesi&quot; ile
         belirlenen amaçlar ve kapsam dışında üçüncü kişilere açıklanmayacaktır.
         Sistemle ilgili sorunların tanımlanması ve verilen hizmet ile ilgili
         çıkabilecek sorunların veya uyuşmazlıkların hızla çözülmesi için,
@@ -39,16 +35,16 @@ const GizlilikVeGuvenlik = (props: Props) => {
         gerektiğinde kullanıcıyla temas kurmak için de kullanılabilir. Firmamız
         tarafından talep edilen bilgiler veya kullanıcı tarafından sağlanan
         bilgiler veya Mağazamız üzerinden yapılan işlemlerle ilgili bilgiler;
-        Firmamız ve işbirliği içinde olduğu kişiler tarafından, "Üyelik
-        Sözleşmesi" ile belirlenen amaçlar ve kapsam dışında da, üyelerimizin
-        kimliği ifşa edilmeden çeşitli istatistiksel değerlendirmeler, veri
-        tabanı oluşturma ve pazar araştırmalarında kullanılabilir. Firmamız,
-        gizli bilgileri kesinlikle özel ve gizli tutmayı, bunu bir sır saklama
-        yükümü olarak addetmeyi ve gizliliğin sağlanması ve sürdürülmesi, gizli
-        bilginin tamamının veya herhangi bir kısmının kamu alanına girmesini
-        veya yetkisiz kullanımını veya üçüncü bir kişiye ifşasını önlemek için
-        gerekli tüm tedbirleri almayı ve gerekli özeni göstermeyi taahhüt
-        etmektedir.
+        Firmamız ve işbirliği içinde olduğu kişiler tarafından, &quot;Üyelik
+        Sözleşmesi&quot; ile belirlenen amaçlar ve kapsam dışında da,
+        üyelerimizin kimliği ifşa edilmeden çeşitli istatistiksel
+        değerlendirmeler, veri tabanı oluşturma ve pazar araştırmalarında
+        kullanılabilir. Firmamız, gizli bilgileri kesinlikle özel ve gizli
+        tutmayı, bunu bir sır saklama yükümü olarak addetmeyi ve gizliliğin
+        sağlanması ve sürdürülmesi, gizli bilginin tamamının veya herhangi bir
+        kısmının kamu alanına girmesini veya yetkisiz kullanımını veya üçüncü
+        bir kişiye ifşasını önlemek için gerekli tüm tedbirleri almayı ve
+        gerekli özeni göstermeyi taahhüt etmektedir.
       </p>
       <h2 className="text-2xl font-semibold mt-6 mb-4">
         KREDİ KARTI GÜVENLİĞİ
@@ -71,7 +67,7 @@ const GizlilikVeGuvenlik = (props: Props) => {
         kaydedilmediğinden, üçüncü şahısların herhangi bir koşulda bu bilgileri
         ele geçirmesi engellenmiş olur. Online olarak kredi kartı ile verilen
         siparişlerin ödeme/fatura/teslimat adresi bilgilerinin güvenilirliği
-        firmamız tarafından Kredi Kartları Dolandırıcılığı'na karşı
+        firmamız tarafından Kredi Kartları Dolandırıcılığı&apos;na karşı
         denetlenmektedir. Bu yüzden, alışveriş sitelerimizden ilk defa sipariş
         veren müşterilerin siparişlerinin tedarik ve teslimat aşamasına
         gelebilmesi için öncelikle finansal ve adres/telefon bilgilerinin
@@ -126,9 +122,9 @@ const GizlilikVeGuvenlik = (props: Props) => {
       </p>
       <h2 className="text-2xl font-semibold mt-6 mb-4">İSTİSNAİ HALLER</h2>
       <p>
-        Aşağıda belirtilen sınırlı hallerde Firmamız, işbu "Gizlilik Politikası"
-        hükümleri dışında kullanıcılara ait bilgileri üçüncü kişilere
-        açıklayabilir. Bu durumlar sınırlı sayıda olmak üzere;
+        Aşağıda belirtilen sınırlı hallerde Firmamız, işbu &quot;Gizlilik
+        Politikası&quot; hükümleri dışında kullanıcılara ait bilgileri üçüncü
+        kişilere açıklayabilir. Bu durumlar sınırlı sayıda olmak üzere;
       </p>
       <ol className="list-decimal list-inside space-y-2">
         <li>
@@ -137,9 +133,9 @@ const GizlilikVeGuvenlik = (props: Props) => {
           getirdiği zorunluluklara uymak;
         </li>
         <li>
-          Mağazamızın kullanıcılarla akdettiği "Üyelik Sözleşmesi"'nin ve diğer
-          sözleşmelerin gereklerini yerine getirmek ve bunları uygulamaya koymak
-          amacıyla;
+          Mağazamızın kullanıcılarla akdettiği &quot;Üyelik
+          Sözleşmesi&quot;&apos;nin ve diğer sözleşmelerin gereklerini yerine
+          getirmek ve bunları uygulamaya koymak amacıyla;
         </li>
         <li>
           Yetkili idari ve adli otorite tarafından usulüne göre yürütülen bir
@@ -167,25 +163,26 @@ const GizlilikVeGuvenlik = (props: Props) => {
         dosyaları, ana bellekte saklanmak üzere bir internet sitesinin
         kullanıcının tarayıcısına (browser) gönderdiği küçük metin dosyalarıdır.
         Teknik iletişim dosyası site hakkında durum ve tercihleri saklayarak
-        İnternet'in kullanımını kolaylaştırır. Teknik iletişim dosyası, siteyi
-        kaç kişinin ziyaret ettiğini, bir kişinin siteyi hangi amaçla, kaç kez
-        ziyaret ettiğini ve ne kadar sitede kaldıkları hakkında istatistiksel
-        bilgileri elde etmeye ve kullanıcılar için özel tasarlanmış kullanıcı
-        sayfalarından dinamik olarak reklam ve içerik üretilmesine yardımcı
-        olur. Teknik iletişim dosyası, ana bellekte veya e-postanızdan veri veya
-        başkaca herhangi bir kişisel bilgi almak için tasarlanmamıştır.
-        Tarayıcıların pek çoğu başta teknik iletişim dosyasını kabul eder
-        biçimde tasarlanmıştır ancak kullanıcılar dilerse teknik iletişim
-        dosyasının gelmemesi veya teknik iletişim dosyasının gönderildiğinde
-        uyarı verilmesini sağlayacak biçimde ayarları değiştirebilirler.
-        Firmamız, işbu "Gizlilik Politikası" hükümlerini dilediği zaman sitede
-        yayınlamak veya kullanıcılara elektronik posta göndermek veya sitesinde
-        yayınlamak suretiyle değiştirebilir. Gizlilik Politikası hükümleri
-        değiştiği takdirde, yayınlandığı tarihte yürürlük kazanır.
+        İnternet&apos;in kullanımını kolaylaştırır. Teknik iletişim dosyası,
+        siteyi kaç kişinin ziyaret ettiğini, bir kişinin siteyi hangi amaçla,
+        kaç kez ziyaret ettiğini ve ne kadar sitede kaldıkları hakkında
+        istatistiksel bilgileri elde etmeye ve kullanıcılar için özel
+        tasarlanmış kullanıcı sayfalarından dinamik olarak reklam ve içerik
+        üretilmesine yardımcı olur. Teknik iletişim dosyası, ana bellekte veya
+        e-postanızdan veri veya başkaca herhangi bir kişisel bilgi almak için
+        tasarlanmamıştır. Tarayıcıların pek çoğu başta teknik iletişim dosyasını
+        kabul eder biçimde tasarlanmıştır ancak kullanıcılar dilerse teknik
+        iletişim dosyasının gelmemesi veya teknik iletişim dosyasının
+        gönderildiğinde uyarı verilmesini sağlayacak biçimde ayarları
+        değiştirebilirler. Firmamız, işbu &quot;Gizlilik Politikası&quot;
+        hükümlerini dilediği zaman sitede yayınlamak veya kullanıcılara
+        elektronik posta göndermek veya sitesinde yayınlamak suretiyle
+        değiştirebilir. Gizlilik Politikası hükümleri değiştiği takdirde,
+        yayınlandığı tarihte yürürlük kazanır.
       </p>
       <p>
         {`Gizlilik politikamız ile ilgili her türlü soru ve önerileriniz için
-        ${process.env.CONTACT_MAIL} adresine email gönderebilirsiniz. Firmamız’a ait aşağıdaki
+        ${process.env.CONTACT_MAIL} adresine email gönderebilirsiniz. Firmamıza ait aşağıdaki
         iletişim bilgilerinden ulaşabilirsiniz.`}
       </p>
       <p>
