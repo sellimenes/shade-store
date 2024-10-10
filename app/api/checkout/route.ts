@@ -30,14 +30,6 @@ export async function POST(req: NextRequest) {
   const debug_on = '1';
   const lang = 'tr';
 
-  const basket = JSON.stringify([
-      ['Örnek Ürün 1', '18.00', 1],
-      ['Örnek Ürün 2', '33.25', 2],
-      ['Örnek Ürün 3', '45.42', 1]
-  ]);
-
-  const user_basket = Buffer.from(basket).toString('base64');
-
   const merchant_oid = "IN" + Date.now();
 
   const {
@@ -46,8 +38,10 @@ export async function POST(req: NextRequest) {
     user_name,
     user_address,
     user_phone,
+    basket_items
   } = data;
 
+  const user_basket = Buffer.from(basket_items).toString('base64');
   // Convert payment_amount to kuruş
   const amount_tl = parseFloat(payment_amount);
   const payment_amount_kurus = Math.round(amount_tl * 100).toString();
@@ -90,7 +84,14 @@ export async function POST(req: NextRequest) {
     }).toString(),
   });
 
-  const res_data = await response.json();
+  const contentType = response.headers.get('content-type');
+  let res_data;
+
+  if (contentType && contentType.includes('application/json')) {
+    res_data = await response.json();
+  } else {
+    res_data = await response.text();
+  }
 
   if (res_data.status === 'success') {
     const iframeToken = res_data.token;
@@ -103,11 +104,27 @@ export async function POST(req: NextRequest) {
         'Content-Type': 'text/html',
       },
     });
+  } else if (res_data.includes('<iframe')) {
+    return new NextResponse(res_data, {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/html',
+      },
+    });
   } else {
-    return new NextResponse(JSON.stringify(res_data), {
+    console.error('Error response from PayTR:', res_data);
+    const errorHTML = `
+      <html>
+        <body>
+          <h1>Error</h1>
+          <p>${res_data.message || 'An error occurred'}</p>
+        </body>
+      </html>
+    `;
+    return new NextResponse(errorHTML, {
       status: 400,
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'text/html',
       },
     });
   }

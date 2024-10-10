@@ -24,7 +24,7 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link href={`/${product.category_slug}/${product.slug}`}>
-      <Card>
+      <Card className="h-full">
         <CardHeader>
           <img
             src={product.cover_img || "/placeholder.svg?height=200&width=200"}

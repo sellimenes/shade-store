@@ -21,6 +21,17 @@ export default async function CheckoutPage() {
     shippingCost
   );
 
+  // Sepeti PayTR formatına dönüştürme
+  const basket_items = cartItems.map((item) => [
+    item.products.name,
+    item.products.price.toFixed(2),
+    item.quantity,
+  ]);
+  basket_items.push(["Shipping", shippingCost.toFixed(2), 1]);
+
+  // Sepeti JSON formatında bir dizeye dönüştürme
+  const basket_items_json = JSON.stringify(basket_items);
+
   return (
     <div className="min-h-screen bg-gray-100 py-8">
       <div className="container mx-auto px-4">
@@ -59,6 +70,11 @@ export default async function CheckoutPage() {
                 type="hidden"
                 name="payment_amount"
                 value={payment_amount}
+              />
+              <input
+                type="hidden"
+                name="basket_items"
+                value={basket_items_json}
               />
               <div className="grid grid-cols-2 gap-4">
                 <div>
