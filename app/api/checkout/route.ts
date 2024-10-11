@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
   const max_installment = '0';
   const currency = 'TRY';
   const test_mode = '1';
-  const merchant_ok_url = "https://yourwebsite.com/success";
+  const merchant_ok_url = "http://localhost:3000/api/paytr";
   const merchant_fail_url = "https://yourwebsite.com/fail";
   const timeout_limit = '30';
   const debug_on = '1';
@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
   const paytr_token = hashSTR + merchant_salt;
   const token = crypto.createHmac('sha256', merchant_key).update(paytr_token).digest('base64');
 
-  // PayTR API'sine POST isteği gönderme
+  // Send POST request to PayTR API
   const response = await fetch('https://www.paytr.com/odeme/api/get-token', {
     method: 'POST',
     headers: {
@@ -84,15 +84,16 @@ export async function POST(req: NextRequest) {
     }).toString(),
   });
 
-  const contentType = response.headers.get('content-type');
+  // Always parse the response as JSON
   let res_data;
-
-  if (contentType && contentType.includes('application/json')) {
+  try {
     res_data = await response.json();
-  } else {
-    res_data = await response.text();
+  } catch (e) {
+    console.error('Failed to parse response as JSON:', e);
+    res_data = {};
   }
 
+  // Check if res_data has a status property
   if (res_data.status === 'success') {
     const iframeToken = res_data.token;
     const iframeHTML = `
@@ -104,20 +105,13 @@ export async function POST(req: NextRequest) {
         'Content-Type': 'text/html',
       },
     });
-  } else if (res_data.includes('<iframe')) {
-    return new NextResponse(res_data, {
-      status: 200,
-      headers: {
-        'Content-Type': 'text/html',
-      },
-    });
   } else {
     console.error('Error response from PayTR:', res_data);
     const errorHTML = `
       <html>
         <body>
           <h1>Error</h1>
-          <p>${res_data.message || 'An error occurred'}</p>
+          <p>${JSON.stringify(res_data)}</p>
         </body>
       </html>
     `;
