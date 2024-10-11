@@ -19,6 +19,7 @@
     "@radix-ui/react-slider": "^1.2.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.0",
+    "@radix-ui/react-toast": "^1.2.2",
     "@supabase/ssr": "^0.5.1",
     "@supabase/supabase-js": "^2.45.4",
     "class-variance-authority": "^0.7.0",
@@ -26,8 +27,10 @@
     "crypto": "^1.0.1",
     "lucide-react": "^0.441.0",
     "next": "14.2.11",
+    "next-themes": "^0.3.0",
     "react": "^18",
     "react-dom": "^18",
+    "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7"
   },

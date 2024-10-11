@@ -11,9 +11,10 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
-import { Star, Plus, Minus } from "lucide-react";
+import { Star, Plus, Minus, Loader } from "lucide-react";
 import Image from "next/image";
 import { addToCart } from "@/lib/supabase/cart";
+import { useToast } from "@/hooks/use-toast";
 
 interface ProductDetailProps {
   product: {
@@ -28,11 +29,13 @@ interface ProductDetailProps {
 }
 
 export function ProductDetail({ product }: ProductDetailProps) {
+  const { toast } = useToast();
   const [quantity, setQuantity] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(-1);
   const [isZoomed, setIsZoomed] = useState(false);
   const imageRef = useRef<HTMLDivElement>(null);
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
+  const [loading, setLoading] = useState(false); // Loading state
 
   const handleImageClick = (index: number) => {
     setCurrentImageIndex(index);
@@ -57,12 +60,20 @@ export function ProductDetail({ product }: ProductDetailProps) {
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   const handleAddToCart = async () => {
+    setLoading(true); // Set loading to true
     const success = await addToCart(parseInt(product.id), quantity);
+    setLoading(false); // Set loading to false
     if (success) {
-      // You can add a toast notification or some other feedback here
-      console.log("Product added to cart successfully");
+      toast({
+        title: "Success!",
+        description: "Product added to cart",
+      });
     } else {
-      console.error("Failed to add product to cart");
+      toast({
+        title: "Error!",
+        description: "Failed to add product to cart",
+        variant: "destructive",
+      });
     }
   };
 
@@ -180,27 +191,6 @@ export function ProductDetail({ product }: ProductDetailProps) {
                 </p>
               </div>
 
-              {/* <div className="mt-6">
-                <div className="flex items-center">
-                  <h3 className="text-sm text-gray-600 font-medium">Color:</h3>
-                  <p className="ml-2 text-sm text-gray-900">Midnight Black</p>
-                </div>
-                <div className="mt-4 flex space-x-2">
-                  {["bg-gray-900", "bg-gray-400", "bg-indigo-600"].map(
-                    (color) => (
-                      <button
-                        key={color}
-                        className={`${color} w-8 h-8 rounded-full border border-black border-opacity-10`}
-                      >
-                        <span className="sr-only">
-                          {color.replace("bg-", "")}
-                        </span>
-                      </button>
-                    )
-                  )}
-                </div>
-              </div> */}
-
               <div className="mt-6">
                 <div className="flex items-center">
                   <h3 className="text-sm text-gray-600 font-medium">
@@ -230,10 +220,19 @@ export function ProductDetail({ product }: ProductDetailProps) {
                 <Button
                   className="max-w-xs flex-1 bg-indigo-600 hover:bg-indigo-700"
                   onClick={handleAddToCart}
+                  disabled={loading} // Disable button when loading
                 >
-                  Add to cart
+                  {loading ? (
+                    <Loader className="animate-spin h-5 w-5" />
+                  ) : (
+                    "Add to cart"
+                  )}
                 </Button>
-                <Button variant="secondary" className="max-w-xs flex-1 ml-3">
+                <Button
+                  variant="secondary"
+                  className="max-w-xs flex-1 ml-3"
+                  onClick={() => toast({ title: "Added to wishlist" })}
+                >
                   Buy Now
                 </Button>
               </div>
