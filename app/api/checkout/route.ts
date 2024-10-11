@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
   const max_installment = '0';
   const currency = 'TRY';
   const test_mode = '1';
-  const merchant_ok_url = "http://localhost:3000/api/paytr";
+  const merchant_ok_url = "http://localhost:3000/success";
   const merchant_fail_url = "https://yourwebsite.com/fail";
   const timeout_limit = '30';
   const debug_on = '1';
