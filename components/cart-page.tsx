@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,11 +12,19 @@ import {
 import Link from "next/link";
 import { ShoppingCart, Trash2, Plus, Minus } from "lucide-react";
 import { updateCartItemQuantity, removeFromCart } from "@/lib/supabase/cart";
+import { getUser } from "@/hooks/auth";
+import { getCartItems } from "@/lib/supabase/cart";
+import {
+  getCartItemsLocal,
+  updateCartItemQuantityLocal,
+  removeFromCartLocal,
+} from "@/lib/cartClient";
+import { getProductById } from "@/lib/supabase/products";
 
 interface CartItem {
   product_id: number;
   quantity: number;
-  products: {
+  products?: {
     id: number;
     name: string;
     price: number;
@@ -24,52 +32,104 @@ interface CartItem {
   };
 }
 
-export function CartPage({
-  cartItems,
-  cartTotal,
-}: {
-  cartItems: CartItem[];
-  cartTotal: number;
-}) {
-  const [localCartItems, setLocalCartItems] = useState(cartItems);
-  const [localCartTotal, setLocalCartTotal] = useState(cartTotal);
+export function CartPage() {
+  const [loading, setLoading] = useState(true);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartTotal, setCartTotal] = useState(0);
+
+  useEffect(() => {
+    const fetchCartItems = async () => {
+      const user = await getUser();
+      let items: CartItem[] = [];
+
+      if (user) {
+        // User is logged in
+        items = await getCartItems();
+      } else {
+        // User is not logged in
+        const localItems = getCartItemsLocal();
+
+        // Fetch product details for each local cart item
+        items = await Promise.all(
+          localItems.map(async (item) => {
+            const product = await getProductById(item.product_id);
+            return { ...item, products: product };
+          })
+        );
+      }
+
+      setCartItems(items);
+      updateTotal(items);
+      setLoading(false);
+    };
+
+    fetchCartItems();
+  }, []);
 
   const updateQuantity = async (productId: number, newQuantity: number) => {
+    const user = await getUser();
     if (newQuantity > 0) {
-      const success = await updateCartItemQuantity(productId, newQuantity);
-      if (success) {
-        setLocalCartItems((prevItems) =>
-          prevItems.map((item) =>
-            item.product_id === productId
-              ? { ...item, quantity: newQuantity }
-              : item
-          )
-        );
-        updateTotal();
+      if (user) {
+        const success = await updateCartItemQuantity(productId, newQuantity);
+        if (success) {
+          setCartItems((prevItems) =>
+            prevItems.map((item) =>
+              item.product_id === productId
+                ? { ...item, quantity: newQuantity }
+                : item
+            )
+          );
+          updateTotal(cartItems);
+        }
+      } else {
+        // Update local storage cart
+        const success = updateCartItemQuantityLocal(productId, newQuantity);
+        if (success) {
+          setCartItems((prevItems) =>
+            prevItems.map((item) =>
+              item.product_id === productId
+                ? { ...item, quantity: newQuantity }
+                : item
+            )
+          );
+          updateTotal(cartItems);
+        }
       }
     }
   };
 
   const removeItem = async (productId: number) => {
-    const success = await removeFromCart(productId);
-    if (success) {
-      setLocalCartItems((prevItems) =>
+    const user = await getUser();
+    if (user) {
+      const success = await removeFromCart(productId);
+      if (success) {
+        setCartItems((prevItems) =>
+          prevItems.filter((item) => item.product_id !== productId)
+        );
+        updateTotal(cartItems);
+      }
+    } else {
+      // Remove from local storage cart
+      removeFromCartLocal(productId);
+      setCartItems((prevItems) =>
         prevItems.filter((item) => item.product_id !== productId)
       );
-      updateTotal();
+      updateTotal(cartItems);
     }
   };
 
-  const updateTotal = () => {
-    const newTotal = localCartItems.reduce(
-      (sum, item) => sum + item.products.price * item.quantity,
+  const updateTotal = (items: CartItem[]) => {
+    const newTotal = items.reduce(
+      (sum, item) => sum + item.quantity * (item.products?.price || 0),
       0
     );
-    setLocalCartTotal(newTotal);
+    setCartTotal(newTotal);
   };
 
-  const tax = localCartTotal * 0.1; // Assuming 10% tax
-  const total = localCartTotal + tax;
+  const tax = cartTotal * 0.1; // Assuming 10% tax
+  const total = cartTotal + tax;
+
+  if (loading) return <Skeleton />;
 
   return (
     <div className="flex flex-col container mx-auto">
@@ -78,8 +138,7 @@ export function CartPage({
           <h1 className="text-3xl font-extrabold text-gray-900 mb-8">
             Your Cart
           </h1>
-
-          {localCartItems.length === 0 ? (
+          {cartItems.length === 0 ? (
             <div className="text-center py-12">
               <ShoppingCart className="mx-auto h-12 w-12 text-gray-400" />
               <h2 className="mt-2 text-lg font-medium text-gray-900">
@@ -103,22 +162,22 @@ export function CartPage({
                   </CardHeader>
                   {cartItems.length > 0 ? (
                     <CardContent>
-                      {localCartItems.map((item) => (
+                      {cartItems.map((item) => (
                         <div
                           key={item.product_id}
                           className="flex items-center py-6 border-b last:border-b-0"
                         >
                           <img
-                            src={item.products.image}
-                            alt={item.products.name}
+                            src={item.products?.image}
+                            alt={item.products?.name}
                             className="w-24 h-24 object-cover rounded"
                           />
                           <div className="ml-4 flex-1">
                             <h3 className="text-lg font-medium text-gray-900">
-                              {item.products.name}
+                              {item.products?.name}
                             </h3>
                             <p className="mt-1 text-sm text-gray-500">
-                              ${item.products.price.toFixed(2)}
+                              ${item.products?.price.toFixed(2)}
                             </p>
                             <div className="mt-2 flex items-center">
                               <Button
@@ -153,7 +212,9 @@ export function CartPage({
                           <div className="ml-4">
                             <p className="text-lg font-medium text-gray-900">
                               $
-                              {(item.products.price * item.quantity).toFixed(2)}
+                              {(
+                                item.products?.price ?? 0 * item.quantity
+                              ).toFixed(2)}
                             </p>
                             <Button
                               variant="ghost"
@@ -183,7 +244,7 @@ export function CartPage({
                     <div className="space-y-2">
                       <div className="flex justify-between">
                         <span>Subtotal</span>
-                        <span>${localCartTotal.toFixed(2)}</span>
+                        <span>${cartTotal.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Tax</span>
@@ -220,19 +281,19 @@ export function CartPage({
 export function Skeleton() {
   return (
     <div className="animate-pulse flex items-center py-6 border-b last:border-b-0">
-      <div className="w-24 h-24 bg-gray-300 rounded"></div>
+      <div className="w-24 h-24 bg-gray-200 rounded" />
       <div className="ml-4 flex-1">
-        <div className="h-6 bg-gray-300 rounded w-3/4"></div>
-        <div className="mt-1 h-4 bg-gray-300 rounded w-1/2"></div>
+        <div className="h-4 bg-gray-200 w-1/2 mb-2 rounded" />
+        <div className="h-4 bg-gray-200 w-1/4 rounded" />
         <div className="mt-2 flex items-center">
-          <div className="h-8 w-8 bg-gray-300 rounded-full"></div>
-          <div className="mx-2 h-6 bg-gray-300 rounded w-8"></div>
-          <div className="h-8 w-8 bg-gray-300 rounded-full"></div>
+          <div className="h-4 bg-gray-200 w-4 rounded" />
+          <div className="mx-2 h-4 bg-gray-200 w-4 rounded" />
+          <div className="h-4 bg-gray-200 w-4 rounded" />
         </div>
       </div>
       <div className="ml-4">
-        <div className="h-6 bg-gray-300 rounded w-16"></div>
-        <div className="mt-2 h-8 w-8 bg-gray-300 rounded-full"></div>
+        <div className="h-4 bg-gray-200 w-1/4 mb-2 rounded" />
+        <div className="h-4 bg-gray-200 w-1/4 rounded" />
       </div>
     </div>
   );

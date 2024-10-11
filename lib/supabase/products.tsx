@@ -40,3 +40,20 @@ export async function getProductBySlug(slug: string) {
 
   return data;
 }
+
+export async function getProductById(productId: number) {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("id", productId)
+    .single();
+
+  if (error) {
+    console.error("Error fetching product:", error);
+    return null;
+  }
+
+  return data;
+}

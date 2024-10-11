@@ -2,6 +2,7 @@
 
 import { getUserId } from "@/hooks/auth";
 import { createClient } from "./server";
+import { addToCartLocal } from "../cartClient";
 
 const getOrCreateCartId = async () => {
   const userId = await getUserId();
@@ -44,6 +45,18 @@ const getOrCreateCartId = async () => {
 };
 
 export const addToCart = async (productId: number, quantity: number) => {
+  const userId = await getUserId();
+  if (!userId) {
+    // If user is not logged in, perform client-side operation
+    if (typeof window !== 'undefined') {
+      addToCartLocal(productId, quantity);
+      return true;
+    } else {
+      console.error("Cannot access localStorage on the server");
+      return false;
+    }
+  }
+
   const supabase = createClient();
   const cartId = await getOrCreateCartId();
 

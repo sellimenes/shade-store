@@ -15,6 +15,8 @@ import { Star, Plus, Minus, Loader } from "lucide-react";
 import Image from "next/image";
 import { addToCart } from "@/lib/supabase/cart";
 import { useToast } from "@/hooks/use-toast";
+import { getUser } from "@/hooks/auth";
+import { addToCartLocal } from "@/lib/cartClient";
 
 interface ProductDetailProps {
   product: {
@@ -61,20 +63,29 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
   const handleAddToCart = async () => {
     setLoading(true); // Set loading to true
-    const success = await addToCart(parseInt(product.id), quantity);
-    setLoading(false); // Set loading to false
-    if (success) {
+    const user = await getUser();
+    if (user) {
+      const success = await addToCart(parseInt(product.id), quantity);
+      if (success) {
+        toast({
+          title: "Success!",
+          description: "Product added to cart",
+        });
+      } else {
+        toast({
+          title: "Error!",
+          description: "Failed to add product to cart",
+          variant: "destructive",
+        });
+      }
+    } else {
+      addToCartLocal(parseInt(product.id), quantity);
       toast({
         title: "Success!",
         description: "Product added to cart",
       });
-    } else {
-      toast({
-        title: "Error!",
-        description: "Failed to add product to cart",
-        variant: "destructive",
-      });
     }
+    setLoading(false); // Set loading to false
   };
 
   return (
