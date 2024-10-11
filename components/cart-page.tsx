@@ -11,15 +11,18 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { ShoppingCart, Trash2, Plus, Minus } from "lucide-react";
-import { updateCartItemQuantity, removeFromCart } from "@/lib/supabase/cart";
-import { getUser } from "@/hooks/auth";
-import { getCartItems } from "@/lib/supabase/cart";
+import {
+  updateCartItemQuantity,
+  removeFromCart,
+  getCartItems,
+} from "@/lib/supabase/cart";
 import {
   getCartItemsLocal,
   updateCartItemQuantityLocal,
   removeFromCartLocal,
 } from "@/lib/cartClient";
 import { getProductById } from "@/lib/supabase/products";
+import { getUser } from "@/hooks/auth";
 
 interface CartItem {
   product_id: number;
@@ -72,27 +75,25 @@ export function CartPage() {
       if (user) {
         const success = await updateCartItemQuantity(productId, newQuantity);
         if (success) {
-          setCartItems((prevItems) =>
-            prevItems.map((item) =>
-              item.product_id === productId
-                ? { ...item, quantity: newQuantity }
-                : item
-            )
+          const updatedItems = cartItems.map((item) =>
+            item.product_id === productId
+              ? { ...item, quantity: newQuantity }
+              : item
           );
-          updateTotal(cartItems);
+          setCartItems(updatedItems);
+          updateTotal(updatedItems);
         }
       } else {
         // Update local storage cart
         const success = updateCartItemQuantityLocal(productId, newQuantity);
         if (success) {
-          setCartItems((prevItems) =>
-            prevItems.map((item) =>
-              item.product_id === productId
-                ? { ...item, quantity: newQuantity }
-                : item
-            )
+          const updatedItems = cartItems.map((item) =>
+            item.product_id === productId
+              ? { ...item, quantity: newQuantity }
+              : item
           );
-          updateTotal(cartItems);
+          setCartItems(updatedItems);
+          updateTotal(updatedItems);
         }
       }
     }
@@ -103,31 +104,31 @@ export function CartPage() {
     if (user) {
       const success = await removeFromCart(productId);
       if (success) {
-        setCartItems((prevItems) =>
-          prevItems.filter((item) => item.product_id !== productId)
+        const updatedItems = cartItems.filter(
+          (item) => item.product_id !== productId
         );
-        updateTotal(cartItems);
+        setCartItems(updatedItems);
+        updateTotal(updatedItems);
       }
     } else {
       // Remove from local storage cart
       removeFromCartLocal(productId);
-      setCartItems((prevItems) =>
-        prevItems.filter((item) => item.product_id !== productId)
+      const updatedItems = cartItems.filter(
+        (item) => item.product_id !== productId
       );
-      updateTotal(cartItems);
+      setCartItems(updatedItems);
+      updateTotal(updatedItems);
     }
   };
 
   const updateTotal = (items: CartItem[]) => {
-    const newTotal = items.reduce(
-      (sum, item) => sum + item.quantity * (item.products?.price || 0),
-      0
-    );
+    const newTotal = items.reduce((sum, item) => {
+      const quantity = item.quantity;
+      const price = item.products?.price ?? 0;
+      return sum + quantity * price;
+    }, 0);
     setCartTotal(newTotal);
   };
-
-  const tax = cartTotal * 0.1; // Assuming 10% tax
-  const total = cartTotal + tax;
 
   if (loading) return <Skeleton />;
 
@@ -160,79 +161,73 @@ export function CartPage() {
                   <CardHeader>
                     <CardTitle>Cart Items</CardTitle>
                   </CardHeader>
-                  {cartItems.length > 0 ? (
-                    <CardContent>
-                      {cartItems.map((item) => (
-                        <div
-                          key={item.product_id}
-                          className="flex items-center py-6 border-b last:border-b-0"
-                        >
-                          <img
-                            src={item.products?.image}
-                            alt={item.products?.name}
-                            className="w-24 h-24 object-cover rounded"
-                          />
-                          <div className="ml-4 flex-1">
-                            <h3 className="text-lg font-medium text-gray-900">
-                              {item.products?.name}
-                            </h3>
-                            <p className="mt-1 text-sm text-gray-500">
-                              ${item.products?.price.toFixed(2)}
-                            </p>
-                            <div className="mt-2 flex items-center">
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                onClick={() =>
-                                  updateQuantity(
-                                    item.product_id,
-                                    item.quantity - 1
-                                  )
-                                }
-                              >
-                                <Minus className="h-4 w-4" />
-                              </Button>
-                              <span className="mx-2 text-gray-700">
-                                {item.quantity}
-                              </span>
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                onClick={() =>
-                                  updateQuantity(
-                                    item.product_id,
-                                    item.quantity + 1
-                                  )
-                                }
-                              >
-                                <Plus className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </div>
-                          <div className="ml-4">
-                            <p className="text-lg font-medium text-gray-900">
-                              $
-                              {(
-                                item.products?.price ?? 0 * item.quantity
-                              ).toFixed(2)}
-                            </p>
+                  <CardContent>
+                    {cartItems.map((item) => (
+                      <div
+                        key={item.product_id}
+                        className="flex items-center py-6 border-b last:border-b-0"
+                      >
+                        <img
+                          src={item.products?.image}
+                          alt={item.products?.name}
+                          className="w-24 h-24 object-cover rounded"
+                        />
+                        <div className="ml-4 flex-1">
+                          <h3 className="text-lg font-medium text-gray-900">
+                            {item.products?.name}
+                          </h3>
+                          <p className="mt-1 text-sm text-gray-500">
+                            {item.products?.price.toFixed(2)}₺
+                          </p>
+                          <div className="mt-2 flex items-center">
                             <Button
-                              variant="ghost"
+                              variant="outline"
                               size="icon"
-                              onClick={() => removeItem(item.product_id)}
-                              className="mt-2"
+                              onClick={() =>
+                                updateQuantity(
+                                  item.product_id,
+                                  item.quantity - 1
+                                )
+                              }
                             >
-                              <Trash2 className="h-5 w-5 text-red-500" />
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <span className="mx-2 text-gray-700">
+                              {item.quantity}
+                            </span>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() =>
+                                updateQuantity(
+                                  item.product_id,
+                                  item.quantity + 1
+                                )
+                              }
+                            >
+                              <Plus className="h-4 w-4" />
                             </Button>
                           </div>
                         </div>
-                      ))}
-                    </CardContent>
-                  ) : (
-                    Array.from({ length: 3 }).map((_, i) => (
-                      <Skeleton key={i} />
-                    ))
-                  )}
+                        <div className="ml-4">
+                          <p className="text-lg font-medium text-gray-900">
+                            {(
+                              (item.products?.price ?? 0) * item.quantity
+                            ).toFixed(2)}
+                            ₺
+                          </p>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => removeItem(item.product_id)}
+                            className="mt-2"
+                          >
+                            <Trash2 className="h-5 w-5 text-red-500" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </CardContent>
                 </Card>
               </div>
               <div>
@@ -243,16 +238,12 @@ export function CartPage() {
                   <CardContent>
                     <div className="space-y-2">
                       <div className="flex justify-between">
-                        <span>Subtotal</span>
-                        <span>${cartTotal.toFixed(2)}</span>
+                        <span>Toplam (Vergi dahil):</span>
+                        <span>{cartTotal.toFixed(2)}₺</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Tax</span>
-                        <span>${tax.toFixed(2)}</span>
-                      </div>
-                      <div className="flex justify-between font-bold">
-                        <span>Total</span>
-                        <span>${total.toFixed(2)}</span>
+                        <span>Kargo:</span>
+                        <span>Ücretsiz</span>
                       </div>
                     </div>
                   </CardContent>
