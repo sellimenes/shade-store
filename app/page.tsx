@@ -1,9 +1,13 @@
-import { HomePage } from "@/components/home-page";
+import FaqSectionHome from "@/components/faq-section-home";
+import ProductCartHome from "@/components/product-cart-home";
+import HeroBanner from "@/components/hero-banner";
 
 export default function Home() {
   return (
-    <div>
-      <HomePage />
-    </div>
+    <>
+      <HeroBanner />
+      <ProductCartHome />
+      <FaqSectionHome />
+    </>
   );
 }

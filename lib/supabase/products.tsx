@@ -57,3 +57,20 @@ export async function getProductById(productId: number) {
 
   return data;
 }
+
+export async function getFeaturedProducts() {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("isFeatured", true)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching featured products:", error);
+    return [];
+  }
+
+  return data;
+}

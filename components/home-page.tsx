@@ -1,15 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import FaqSectionHome from "./faq-section-home";
-import ProductCartHome from "./product-cart-home";
 
 export function HomePage() {
   return (
@@ -31,44 +22,6 @@ export function HomePage() {
               Shop Now
             </Button>
           </div>
-        </div>
-      </section>
-
-      <ProductCartHome />
-      <FaqSectionHome />
-
-      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className="text-3xl font-extrabold text-gray-900 mb-8">
-          Featured Products
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[1, 2, 3, 4].map((product) => (
-            <Card key={product}>
-              <CardHeader>
-                <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
-                  <img
-                    src={`/placeholder.svg?height=300&width=300`}
-                    alt={`Product ${product}`}
-                    className="h-full w-full object-cover object-center"
-                  />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <CardTitle className="text-lg font-medium text-gray-900">
-                  Product {product}
-                </CardTitle>
-                <p className="mt-1 text-sm text-gray-500">
-                  This is a description for Product {product}
-                </p>
-              </CardContent>
-              <CardFooter className="flex justify-between items-center">
-                <span className="text-lg font-bold text-gray-900">
-                  ${(19.99 * product).toFixed(2)}
-                </span>
-                <Button>Add to Cart</Button>
-              </CardFooter>
-            </Card>
-          ))}
         </div>
       </section>
     </>
