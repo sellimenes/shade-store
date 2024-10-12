@@ -8,6 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import FaqSectionHome from "./faq-section-home";
+import ProductCartHome from "./product-cart-home";
 
 export function HomePage() {
   return (
@@ -31,6 +33,9 @@ export function HomePage() {
           </div>
         </div>
       </section>
+
+      <ProductCartHome />
+      <FaqSectionHome />
 
       <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <h2 className="text-3xl font-extrabold text-gray-900 mb-8">
