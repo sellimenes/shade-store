@@ -40,9 +40,16 @@ interface CartItem {
 }
 
 interface ServerCartItem {
-  product_id: number;
   quantity: number;
-  products: Product;
+  product_id: number;
+  products: {
+    id: number;
+    name: string;
+    price: number;
+    cover_img: string;
+    description: string;
+    stock: number;
+  }[];
 }
 
 export function CartPage() {
@@ -70,16 +77,16 @@ export function CartPage() {
       let items: CartItem[] = [];
       if (user) {
         const serverItems = await getCartItems();
-        items = serverItems.map((item: any) => ({
+        items = serverItems.map((item: ServerCartItem) => ({
           product_id: item.product_id,
           quantity: item.quantity,
           products: {
-            id: item.products.id,
-            name: item.products.name,
-            price: item.products.price,
-            cover_img: item.products.cover_img,
-            description: item.products.description,
-            stock: item.products.stock,
+            id: item.products[0].id,
+            name: item.products[0].name,
+            price: item.products[0].price,
+            cover_img: item.products[0].cover_img,
+            description: item.products[0].description,
+            stock: item.products[0].stock,
           },
         }));
       } else {
