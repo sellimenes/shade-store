@@ -3,7 +3,7 @@
 import { getUserId } from "@/hooks/auth";
 import { createClient } from "./server";
 import { addToCartLocal } from "../cartClient";
-import { cartStore } from "../store/cart";
+import { Database } from "@/lib/database.types";
 
 // Cache the cart ID for the current request
 let currentCartId: string | null = null;
@@ -57,7 +57,6 @@ export const addToCart = async (productId: number, quantity: number) => {
       // If user is not logged in, perform client-side operation
       if (typeof window !== 'undefined') {
         addToCartLocal(productId, quantity);
-        cartStore.increment();
         return true;
       } else {
         throw new Error("Cannot access localStorage on the server");
@@ -110,7 +109,17 @@ export const addToCart = async (productId: number, quantity: number) => {
       if (insertError) {
         throw new Error(`Error inserting new cart item: ${insertError.message}`);
       }
-      cartStore.increment();
+    }
+
+    // Get updated cart count
+    const { data: cartItems } = await supabase
+      .from("cart_items")
+      .select("id")
+      .eq("cart_id", cartId);
+
+    if (typeof window !== 'undefined') {
+      const { useCartStore } = await import('@/lib/store/cart');
+      useCartStore.getState().setCount(cartItems?.length || 0);
     }
 
     return true;
@@ -139,7 +148,7 @@ export const getCartItems = async () => {
       quantity,
       product_id,
       created_at,
-      products!inner (
+      products (
         id,
         name,
         price,
@@ -162,7 +171,11 @@ export const getCartItems = async () => {
     return [];
   }
 
-  return data || [];
+  // Transform the data to match the expected format
+  return (data || []).map(item => ({
+    ...item,
+    products: item.products as unknown as Database["public"]["Tables"]["products"]["Row"]
+  }));
 };
 
 export const removeFromCart = async (productId: number) => {
@@ -185,7 +198,15 @@ export const removeFromCart = async (productId: number) => {
     return false;
   }
 
-  cartStore.decrement();
+  if (typeof window !== 'undefined') {
+    const { useCartStore } = await import('@/lib/store/cart');
+    const { data: cartItems } = await supabase
+      .from("cart_items")
+      .select("id")
+      .eq("cart_id", cartId);
+    useCartStore.getState().setCount(cartItems?.length || 0);
+  }
+
   return true;
 };
 
@@ -196,6 +217,11 @@ export const updateCartItemQuantity = async (productId: number, quantity: number
   if (!cartId) {
     console.error("Failed to get or create cart");
     return false;
+  }
+
+  if (quantity <= 0) {
+    // If quantity is 0 or less, remove the item
+    return removeFromCart(productId);
   }
 
   const { error } = await supabase
@@ -210,8 +236,14 @@ export const updateCartItemQuantity = async (productId: number, quantity: number
   }
 
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(new Event('cart-updated'));
+    const { useCartStore } = await import('@/lib/store/cart');
+    const { data: cartItems } = await supabase
+      .from("cart_items")
+      .select("id")
+      .eq("cart_id", cartId);
+    useCartStore.getState().setCount(cartItems?.length || 0);
   }
+
   return true;
 };
 

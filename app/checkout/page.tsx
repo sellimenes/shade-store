@@ -17,14 +17,14 @@ export default async function CheckoutPage() {
   // payment_amount hesaplama
   const shippingCost = 5.0;
   const payment_amount = cartItems.reduce(
-    (acc, item) => acc + item.products[0].price * item.quantity,
+    (acc, item) => acc + item.products.price * item.quantity,
     shippingCost
   );
 
   // Sepeti PayTR formatına dönüştürme
   const basket_items = cartItems.map((item) => [
-    item.products[0].name,
-    item.products[0].price.toFixed(2),
+    item.products.name,
+    item.products.price.toFixed(2),
     item.quantity,
   ]);
   basket_items.push(["Shipping", shippingCost.toFixed(2), 1]);
@@ -44,9 +44,9 @@ export default async function CheckoutPage() {
               {cartItems.map((item) => (
                 <div key={item.product_id} className="flex justify-between">
                   <span>
-                    {item.products[0].name} x {item.quantity}
+                    {item.products.name} x {item.quantity}
                   </span>
-                  <span>{item.products[0].price * item.quantity} ₺</span>
+                  <span>{item.products.price * item.quantity} ₺</span>
                 </div>
               ))}
               <div className="flex justify-between">

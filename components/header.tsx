@@ -4,20 +4,17 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ShoppingCart, Search, User } from "lucide-react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect } from "react";
 import { getCartItems } from "@/lib/supabase/cart";
 import { getCartItemsLocal } from "@/lib/cartClient";
 import { getUser } from "@/hooks/auth";
 import { cn } from "@/lib/utils";
-import { cartStore } from "@/lib/store/cart";
+import { useCartStore } from "@/lib/store/cart";
 
 function CartButton() {
-  const [cartCount, setCartCount] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const prevCountRef = useRef(cartCount);
+  const { count, setCount } = useCartStore();
 
   useEffect(() => {
-    // Initial cart count
     const fetchInitialCount = async () => {
       const user = await getUser();
       let items = [];
@@ -26,64 +23,25 @@ function CartButton() {
       } else {
         items = getCartItemsLocal();
       }
-      cartStore.setCount(items.length);
+      setCount(items.length);
     };
     fetchInitialCount();
-
-    // Subscribe to cart count changes
-    const unsubscribe = cartStore.subscribe(() => {
-      const newCount = cartStore.getCount();
-      if (newCount !== prevCountRef.current) {
-        setIsAnimating(true);
-        setTimeout(() => setIsAnimating(false), 800);
-      }
-      prevCountRef.current = newCount;
-      setCartCount(newCount);
-    });
-
-    return () => unsubscribe();
-  }, []);
+  }, [setCount]);
 
   return (
     <Link href="/cart">
       <Button variant="ghost" size="icon" className="relative">
         <ShoppingCart className="w-6 h-6" />
-        {cartCount > 0 && (
+        {count > 0 && (
           <span
             className={cn(
-              "absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center transition-all duration-200",
-              isAnimating &&
-                "animate-[counter-bounce_0.8s_cubic-bezier(0.36,0,0.66,1.3)]"
+              "absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center transition-transform duration-200",
+              "animate-in zoom-in-50"
             )}
-            style={{
-              animation: isAnimating
-                ? "counter-bounce 0.8s cubic-bezier(0.36,0,0.66,1.3)"
-                : "none",
-            }}
           >
-            {cartCount}
+            {count}
           </span>
         )}
-        <style jsx global>{`
-          @keyframes counter-bounce {
-            0%,
-            100% {
-              transform: translateY(0) scale(1);
-            }
-            20% {
-              transform: translateY(-6px) scale(1.1);
-            }
-            40% {
-              transform: translateY(0) scale(1.02);
-            }
-            60% {
-              transform: translateY(-3px) scale(1.05);
-            }
-            80% {
-              transform: translateY(0) scale(1);
-            }
-          }
-        `}</style>
         <span className="sr-only">Cart</span>
       </Button>
     </Link>

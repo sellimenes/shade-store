@@ -19,6 +19,7 @@ import {
 } from "@/lib/cartClient";
 import { getProductById } from "@/lib/supabase/products";
 import { Database } from "@/lib/database.types";
+import { useCartStore } from "@/lib/store/cart";
 
 type Product = Database["public"]["Tables"]["products"]["Row"];
 type DbCartItem = Database["public"]["Tables"]["cart_items"]["Row"];
@@ -33,6 +34,7 @@ interface CartPageProps {
 }
 
 export function CartPage({ isLoggedIn, serverCartItems }: CartPageProps) {
+  const { setCount } = useCartStore();
   const [state, setState] = useState<{
     loading: boolean;
     cartItems: CartItemWithProduct[];
@@ -42,6 +44,11 @@ export function CartPage({ isLoggedIn, serverCartItems }: CartPageProps) {
     cartItems: [],
     cartTotal: 0,
   });
+
+  useEffect(() => {
+    // Update cart count when component mounts
+    setCount(serverCartItems.length);
+  }, [serverCartItems.length, setCount]);
 
   const updateTotal = (items: CartItemWithProduct[]) => {
     const newTotal = items.reduce(
@@ -92,7 +99,11 @@ export function CartPage({ isLoggedIn, serverCartItems }: CartPageProps) {
   }, [isLoggedIn, serverCartItems]);
 
   const updateQuantity = async (productId: number, newQuantity: number) => {
-    if (newQuantity <= 0) return;
+    if (newQuantity <= 0) {
+      // If quantity is 0 or less, remove the item
+      await removeItem(productId);
+      return;
+    }
 
     try {
       const success = isLoggedIn
@@ -132,6 +143,7 @@ export function CartPage({ isLoggedIn, serverCartItems }: CartPageProps) {
           const updatedItems = prev.cartItems.filter(
             (item) => item.product_id !== productId
           );
+          setCount(updatedItems.length); // Update cart count
           return {
             ...prev,
             cartItems: updatedItems,

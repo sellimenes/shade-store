@@ -1,41 +1,18 @@
-type Listener = () => void;
+import { create } from 'zustand';
+import { StateCreator } from 'zustand';
 
-class CartStore {
-  private count: number = 0;
-  private listeners: Set<Listener> = new Set();
-
-  getCount() {
-    return this.count;
-  }
-
-  setCount(count: number) {
-    this.count = count;
-    this.notifyListeners();
-  }
-
-  increment() {
-    this.count++;
-    this.notifyListeners();
-  }
-
-  decrement() {
-    if (this.count > 0) {
-      this.count--;
-      this.notifyListeners();
-    }
-  }
-
-  subscribe(listener: Listener) {
-    this.listeners.add(listener);
-    return () => {
-      this.listeners.delete(listener);
-      return undefined;
-    };
-  }
-
-  private notifyListeners() {
-    this.listeners.forEach(listener => listener());
-  }
+interface CartState {
+  count: number;
+  setCount: (count: number) => void;
+  increment: () => void;
+  decrement: () => void;
 }
 
-export const cartStore = new CartStore(); 
+const createCartStore: StateCreator<CartState> = (set) => ({
+  count: 0,
+  setCount: (count: number) => set({ count }),
+  increment: () => set((state) => ({ count: state.count + 1 })),
+  decrement: () => set((state) => ({ count: Math.max(0, state.count - 1) })),
+});
+
+export const useCartStore = create<CartState>(createCartStore); 
