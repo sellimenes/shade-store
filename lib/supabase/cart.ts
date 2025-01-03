@@ -134,15 +134,23 @@ export const getCartItems = async () => {
   const { data, error } = await supabase
     .from("cart_items")
     .select(`
+      id,
+      cart_id,
       quantity,
       product_id,
+      created_at,
       products!inner (
         id,
         name,
         price,
-        cover_img,
+        image,
         description,
-        stock
+        stock,
+        category_id,
+        slug,
+        isFeatured,
+        created_at,
+        updated_at
       )
     `)
     .eq("cart_id", cartId);

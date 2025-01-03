@@ -11,51 +11,31 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { ShoppingCart, Trash2, Plus, Minus } from "lucide-react";
-import {
-  updateCartItemQuantity,
-  removeFromCart,
-  getCartItems,
-} from "@/lib/supabase/cart";
+import { updateCartItemQuantity, removeFromCart } from "@/lib/supabase/cart";
 import {
   getCartItemsLocal,
   updateCartItemQuantityLocal,
   removeFromCartLocal,
 } from "@/lib/cartClient";
 import { getProductById } from "@/lib/supabase/products";
-import { getUser } from "@/hooks/auth";
+import { Database } from "@/lib/database.types";
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  cover_img: string;
-  description: string;
-  stock: number;
-}
+type Product = Database["public"]["Tables"]["products"]["Row"];
+type DbCartItem = Database["public"]["Tables"]["cart_items"]["Row"];
 
-interface CartItem {
-  product_id: number;
-  quantity: number;
+interface CartItemWithProduct extends DbCartItem {
   products: Product;
 }
 
-interface ServerCartItem {
-  quantity: number;
-  product_id: number;
-  products: {
-    id: number;
-    name: string;
-    price: number;
-    cover_img: string;
-    description: string;
-    stock: number;
-  }[];
+interface CartPageProps {
+  isLoggedIn: boolean;
+  serverCartItems: CartItemWithProduct[];
 }
 
-export function CartPage() {
+export function CartPage({ isLoggedIn, serverCartItems }: CartPageProps) {
   const [state, setState] = useState<{
     loading: boolean;
-    cartItems: CartItem[];
+    cartItems: CartItemWithProduct[];
     cartTotal: number;
   }>({
     loading: true,
@@ -63,7 +43,7 @@ export function CartPage() {
     cartTotal: 0,
   });
 
-  const updateTotal = (items: CartItem[]) => {
+  const updateTotal = (items: CartItemWithProduct[]) => {
     const newTotal = items.reduce(
       (sum, item) => sum + item.quantity * item.products.price,
       0
@@ -72,43 +52,29 @@ export function CartPage() {
   };
 
   const fetchCartItems = async () => {
-    const user = await getUser();
     try {
-      let items: CartItem[] = [];
-      if (user) {
-        const serverItems = await getCartItems();
-        items = serverItems.map((item: ServerCartItem) => ({
-          product_id: item.product_id,
-          quantity: item.quantity,
-          products: {
-            id: item.products[0].id,
-            name: item.products[0].name,
-            price: item.products[0].price,
-            cover_img: item.products[0].cover_img,
-            description: item.products[0].description,
-            stock: item.products[0].stock,
-          },
-        }));
+      let items: CartItemWithProduct[] = [];
+      if (isLoggedIn) {
+        items = serverCartItems;
       } else {
         const localItems = getCartItemsLocal();
         items = await Promise.all(
           localItems.map(async (item) => {
             const product = await getProductById(item.product_id);
+            if (!product)
+              throw new Error(`Product not found: ${item.product_id}`);
+
             return {
-              ...item,
-              products: {
-                id: product.id,
-                name: product.name,
-                price: product.price,
-                cover_img: product.cover_img,
-                description: product.description,
-                stock: product.stock,
-              },
+              id: 0,
+              cart_id: 0,
+              product_id: item.product_id,
+              quantity: item.quantity,
+              created_at: new Date().toISOString(),
+              products: product,
             };
           })
         );
       }
-      console.log("Mapped cart items:", items);
       setState((prev) => ({
         ...prev,
         cartItems: items,
@@ -123,14 +89,13 @@ export function CartPage() {
 
   useEffect(() => {
     fetchCartItems();
-  }, []);
+  }, [isLoggedIn, serverCartItems]);
 
   const updateQuantity = async (productId: number, newQuantity: number) => {
     if (newQuantity <= 0) return;
 
     try {
-      const user = await getUser();
-      const success = user
+      const success = isLoggedIn
         ? await updateCartItemQuantity(productId, newQuantity)
         : updateCartItemQuantityLocal(productId, newQuantity);
 
@@ -158,8 +123,7 @@ export function CartPage() {
 
   const removeItem = async (productId: number) => {
     try {
-      const user = await getUser();
-      const success = user
+      const success = isLoggedIn
         ? await removeFromCart(productId)
         : removeFromCartLocal(productId);
 
@@ -238,7 +202,7 @@ function CartItemsList({
   onUpdateQuantity,
   onRemoveItem,
 }: {
-  items: CartItem[];
+  items: CartItemWithProduct[];
   onUpdateQuantity: (productId: number, quantity: number) => Promise<void>;
   onRemoveItem: (productId: number) => Promise<void>;
 }) {
@@ -254,7 +218,7 @@ function CartItemsList({
             className="flex items-center py-6 border-b last:border-b-0"
           >
             <img
-              src={item.products.cover_img}
+              src={item.products.image[0]}
               alt={item.products.name}
               className="w-24 h-24 object-cover rounded"
             />
