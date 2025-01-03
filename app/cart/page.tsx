@@ -17,7 +17,7 @@ const Cart = async () => {
   if (user) {
     try {
       const serverItems = await getCartItems();
-      cartItems = serverItems.map((item: any) => ({
+      cartItems = serverItems.map((item: CartItemWithProduct) => ({
         id: item.id,
         cart_id: item.cart_id,
         product_id: item.product_id,
